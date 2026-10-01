@@ -1,0 +1,270 @@
+import type { Module, Skill } from './types'
+
+export const SKILLS: Skill[] = [
+  { id: 'soc', name: 'SOC Operations', blurb: 'Roles, workflow, triage, escalation, verdicts.' },
+  { id: 'computers', name: 'Computer Fundamentals', blurb: 'Processes, services, memory, permissions.' },
+  { id: 'networking', name: 'Networking', blurb: 'TCP/IP, ports, DNS, protocols and their evidence.' },
+  { id: 'windows', name: 'Windows', blurb: 'Processes, event logs, Event IDs as evidence.' },
+  { id: 'linux', name: 'Linux', blurb: 'Users, permissions, services, syslog.' },
+  { id: 'identity', name: 'Identity', blurb: 'Active Directory, Entra ID, authentication.' },
+  { id: 'logging', name: 'Logging & Telemetry', blurb: 'Reading log fields and sources.' },
+  { id: 'siem', name: 'SIEM', blurb: 'Ingestion, normalization, correlation, detection.' },
+  { id: 'kql', name: 'KQL', blurb: 'Querying security data with Kusto Query Language.' },
+  { id: 'sentinel', name: 'Microsoft Sentinel', blurb: 'Workspace, connectors, analytics rules, incidents.' },
+  { id: 'defender', name: 'Defender XDR', blurb: 'Unified incidents across endpoint, email, identity, cloud.' },
+  { id: 'hunting', name: 'Threat Hunting', blurb: 'Advanced Hunting tables and hypothesis-driven hunts.' },
+  { id: 'ir', name: 'Incident Response', blurb: 'Triage, scope, contain, eradicate, recover.' },
+  { id: 'mitre', name: 'MITRE ATT&CK', blurb: 'Tactics, techniques, mapping detections.' },
+  { id: 'threatintel', name: 'Threat Intelligence', blurb: 'IOCs, IOAs, TTPs, enrichment.' },
+]
+
+/** Sidebar grouping (brief §54). Module ids in display order. */
+export const TRACKS: { id: string; title: string; modules: string[] }[] = [
+  { id: 'start', title: 'Start here', modules: ['orientation'] },
+  { id: 'foundations', title: 'Foundations', modules: ['computers', 'networking', 'windows', 'linux'] },
+  { id: 'identity', title: 'Identity', modules: ['active-directory', 'entra-id', 'identity-security'] },
+  { id: 'security', title: 'Security Concepts', modules: ['cyber-fundamentals', 'malware', 'phishing'] },
+  { id: 'soc', title: 'SOC', modules: ['soc', 'logging', 'siem', 'threat-intel', 'mitre'] },
+  { id: 'microsoft', title: 'Microsoft Security', modules: ['sentinel', 'defender-xdr', 'mde', 'mdo', 'mdi'] },
+  { id: 'investigation', title: 'Investigation', modules: ['kql', 'advanced-hunting', 'incident-response', 'detection-engineering', 'soar', 'threat-hunting'] },
+  { id: 'cert', title: 'Certification', modules: ['sc200'] },
+  { id: 'career', title: 'Career', modules: ['interview', 'ticket-writing', 'projects'] },
+]
+
+/** Recommended learning order (brief §1). */
+export const LEARNING_PATH = [
+  'orientation', 'computers', 'networking', 'windows', 'linux', 'active-directory', 'entra-id', 'cyber-fundamentals',
+  'soc', 'threat-intel', 'mitre', 'logging', 'siem', 'kql', 'sentinel', 'defender-xdr', 'mde', 'mdo', 'mdi',
+  'advanced-hunting', 'incident-response', 'detection-engineering', 'soar', 'threat-hunting', 'sc200',
+  'interview', 'ticket-writing', 'projects',
+]
+
+export const MODULES: Module[] = [
+  {
+    id: 'orientation', number: 0, title: 'Orientation', track: 'start', mode: 'both', status: 'ready',
+    blurb: 'What defenders do, the core vocabulary, and how this course is organized. Start here if you are new.',
+    objectives: ['Describe what a SOC analyst does day to day', 'Distinguish threat, vulnerability and risk', 'Define endpoint, server, network, account, log, alert and evidence in plain words', 'Use the level structure of each lesson'],
+    prereqs: [], skills: ['soc'],
+    lessons: ['start-here'],
+  },
+  {
+    id: 'soc', number: 1, title: 'SOC Fundamentals', track: 'soc', mode: 'both', status: 'ready',
+    blurb: 'Why security operations centers exist, who works in them, and the vocabulary every analyst uses daily.',
+    objectives: [
+      'Explain why organizations build a SOC and what it is accountable for',
+      'Describe Tier 1/2/3, detection engineering, hunting, IR and threat intel roles',
+      'Trace how an event becomes a log, telemetry, an alert and an incident',
+      'Explain IOC, IOA and TTP and when each is most useful',
+      'Classify alerts as true positive, benign true positive or false positive and justify it',
+    ],
+    prereqs: ['computers', 'networking'], skills: ['soc', 'threatintel'],
+    lessons: ['soc-what-is-a-soc', 'soc-event-to-incident', 'soc-ioc-ioa-ttp', 'soc-triage-verdicts'],
+  },
+  {
+    id: 'computers', number: 2, title: 'Computer Fundamentals', track: 'foundations', mode: 'soc', status: 'ready',
+    blurb: 'Processes, services, users and permissions — the building blocks that every piece of endpoint evidence describes.',
+    objectives: [
+      'Explain CPU, memory, storage, OS and kernel vs user space in security terms',
+      'Distinguish programs, processes, threads and services',
+      'Read a process tree and explain why parent-child relationships matter',
+      'Explain users, groups and permissions and the principle of least privilege',
+    ],
+    prereqs: ['orientation'], skills: ['computers'],
+    lessons: ['comp-processes', 'comp-users-permissions'],
+  },
+  {
+    id: 'networking', number: 3, title: 'Networking Fundamentals', track: 'foundations', mode: 'soc', status: 'ready',
+    blurb: 'How data moves, which protocols matter to defenders, and what network evidence looks like.',
+    objectives: [
+      'Explain IP addresses, ports, TCP vs UDP and the TCP handshake',
+      'Use the OSI/TCP-IP models to reason about where evidence comes from',
+      'Explain DNS resolution and why DNS logs are valuable to a SOC',
+      'Recognize normal vs unusual network patterns at a high level',
+    ],
+    prereqs: ['computers'], skills: ['networking'],
+    lessons: ['net-tcpip-ports', 'net-dns'],
+  },
+  {
+    id: 'windows', number: 4, title: 'Windows Fundamentals & Security', track: 'foundations', mode: 'both', status: 'ready',
+    blurb: 'How Windows records what happens, and how to reason from a user action to an Event ID.',
+    objectives: [
+      'Explain what Windows event logs are and which channels matter to a SOC',
+      'Reason from a user action to the event it generates (4624, 4625, 4688, 4672, 4720, 4728, 4732, 7045)',
+      'Interpret key fields such as Logon Type, account and source address',
+      'Know which Microsoft tables carry Windows evidence',
+    ],
+    prereqs: ['computers'], skills: ['windows'],
+    lessons: ['win-event-logs'],
+  },
+  {
+    id: 'linux', number: 5, title: 'Linux Security', track: 'foundations', mode: 'soc', status: 'outline',
+    blurb: 'Users, permissions, services, systemd and syslog for analysts who triage Linux hosts.',
+    objectives: ['Linux architecture, users, groups, permissions', 'Processes, services and systemd', 'syslog and journalctl as evidence sources', 'Why ls, grep, ps, ss, journalctl and friends matter to an analyst', 'Syslog via AMA into Microsoft Sentinel'],
+    prereqs: ['computers'], skills: ['linux'], lessons: [], coveredIn: ['comp-users-permissions', 'log-anatomy'],
+  },
+  {
+    id: 'active-directory', number: 6, title: 'Active Directory Security', track: 'identity', mode: 'both', status: 'outline',
+    blurb: 'Domains, domain controllers, Kerberos and NTLM, and the identity evidence they produce.',
+    objectives: ['Domains, DCs, OUs, GPOs', 'Kerberos and NTLM at a conceptual level', 'Privileged groups and why changes to them matter', 'Identity evidence in Defender for Identity'],
+    prereqs: ['windows', 'networking'], skills: ['identity'], lessons: [], coveredIn: ['comp-users-permissions', 'win-event-logs'],
+  },
+  {
+    id: 'entra-id', number: 7, title: 'Microsoft Entra ID', track: 'identity', mode: 'both', status: 'outline',
+    blurb: 'Cloud identity: sign-in and audit logs, MFA, Conditional Access, Identity Protection.',
+    objectives: ['Users, groups, roles, applications and service principals', 'MFA and Conditional Access', 'Sign-in logs vs audit logs', 'Risky users and risky sign-ins'],
+    prereqs: ['active-directory'], skills: ['identity'], lessons: [], coveredIn: ['log-anatomy', 'xdr-unified-incidents'],
+  },
+  {
+    id: 'cyber-fundamentals', number: 8, title: 'Cybersecurity Fundamentals', track: 'security', mode: 'soc', status: 'outline',
+    blurb: 'CIA triad, threat/vulnerability/risk, control types, defense in depth and Zero Trust.',
+    objectives: ['CIA triad', 'Threat vs vulnerability vs risk', 'Preventive, detective, corrective controls', 'Defense in depth, Zero Trust, least privilege'],
+    prereqs: [], skills: ['soc'], lessons: [], coveredIn: ['soc-what-is-a-soc', 'comp-users-permissions'],
+  },
+  {
+    id: 'malware', number: 9, title: 'Malware Fundamentals', track: 'security', mode: 'soc', status: 'outline',
+    blurb: 'Malware categories and, most importantly, the defensive evidence that execution leaves behind.',
+    objectives: ['Common malware categories', 'Static vs behavioral indicators', 'How execution shows up as process, file and network evidence', 'Detection approaches'],
+    prereqs: ['computers', 'networking'], skills: ['defender'], lessons: [], coveredIn: ['soc-ioc-ioa-ttp', 'comp-processes'],
+  },
+  {
+    id: 'phishing', number: 10, title: 'Phishing & Email Security', track: 'security', mode: 'both', status: 'outline',
+    blurb: 'Email anatomy, SPF/DKIM/DMARC, and investigation in Defender for Office 365.',
+    objectives: ['Email headers and authentication results', 'SPF, DKIM and DMARC', 'Reported message triage', 'Defender for Office 365 investigation and remediation'],
+    prereqs: ['networking'], skills: ['defender'], lessons: [], coveredIn: ['ah-choose-table'],
+  },
+  {
+    id: 'identity-security', number: 11, title: 'Identity & Authentication Security', track: 'identity', mode: 'both', status: 'outline',
+    blurb: 'Defensive view of password attacks, MFA, token and session risk, and authentication logs.',
+    objectives: ['How failed-authentication patterns differ', 'MFA and its limits', 'Session/token risk concepts', 'Investigating authentication logs'],
+    prereqs: ['entra-id'], skills: ['identity'], lessons: [], coveredIn: ['soc-triage-verdicts', 'win-event-logs'],
+  },
+  {
+    id: 'mitre', number: 12, title: 'MITRE ATT&CK', track: 'soc', mode: 'both', status: 'ready',
+    blurb: 'A shared language for adversary behavior — and how SOCs use it to measure and improve detection coverage.',
+    objectives: [
+      'Explain why ATT&CK exists and how it differs from a checklist',
+      'Distinguish tactics, techniques, sub-techniques and procedures',
+      'Map evidence and detections to techniques',
+      'Use the matrix to analyze detection coverage (an SC-200 objective)',
+    ],
+    prereqs: ['soc'], skills: ['mitre'],
+    lessons: ['mitre-framework'],
+  },
+  {
+    id: 'threat-intel', number: 13, title: 'IOC, IOA & Threat Intelligence', track: 'soc', mode: 'both', status: 'outline',
+    blurb: 'Intelligence types, enrichment, STIX/TAXII and ingesting indicators into Sentinel.',
+    objectives: ['Strategic, operational, tactical, technical intelligence', 'Enrichment and reputation', 'STIX and TAXII', 'Ingesting threat indicators into Microsoft Sentinel'],
+    prereqs: ['soc'], skills: ['threatintel'], lessons: [], coveredIn: ['soc-ioc-ioa-ttp'],
+  },
+  {
+    id: 'logging', number: 14, title: 'Logging & Telemetry', track: 'soc', mode: 'both', status: 'ready',
+    blurb: 'What a log actually contains, how to read one field by field, and where each log source comes from.',
+    objectives: ['Distinguish event, log and telemetry', 'Read the core fields of any log (time, who, where, what, result)', 'Know the main log sources and what each can and cannot tell you', 'Handle time zones and JSON fields'],
+    prereqs: ['windows', 'networking'], skills: ['logging'],
+    lessons: ['log-anatomy'],
+  },
+  {
+    id: 'siem', number: 15, title: 'SIEM Fundamentals', track: 'soc', mode: 'both', status: 'ready',
+    blurb: 'Why centralizing security data changes what a SOC can see, and the pipeline from source to incident.',
+    objectives: ['Explain the problem SIEM solves', 'Describe collection, ingestion, parsing, normalization, storage, query, detection', 'Explain correlation and why it reduces noise', 'Explain retention trade-offs'],
+    prereqs: ['logging'], skills: ['siem'],
+    lessons: ['siem-pipeline'],
+  },
+  {
+    id: 'kql', number: 16, title: 'KQL From Zero', track: 'investigation', mode: 'both', status: 'ready',
+    blurb: 'The query language behind Sentinel and Advanced Hunting, taught from tables and rows up.',
+    objectives: ['Explain tables, rows, columns and data types', 'Use where, project, summarize, extend, join, let and time filters', 'Choose between has and contains', 'Read query results and avoid common mistakes'],
+    prereqs: ['logging', 'siem'], skills: ['kql'],
+    lessons: ['kql-what-why'],
+  },
+  {
+    id: 'sentinel', number: 18, title: 'Microsoft Sentinel', track: 'microsoft', mode: 'both', status: 'ready',
+    blurb: 'Microsoft\'s cloud-native SIEM: workspace, connectors, analytics rules, incidents, automation.',
+    objectives: ['Explain the Sentinel architecture and Log Analytics workspace', 'Select data connectors for a data source', 'Configure scheduled and NRT analytics rules', 'Explain entities, incidents, automation rules and playbooks'],
+    prereqs: ['siem', 'kql'], skills: ['sentinel'],
+    lessons: ['sentinel-architecture', 'sentinel-analytics-rules'],
+  },
+  {
+    id: 'defender-xdr', number: 19, title: 'Microsoft Defender XDR', track: 'microsoft', mode: 'both', status: 'ready',
+    blurb: 'Why XDR exists and how Defender correlates endpoint, email, identity and cloud signals into one incident.',
+    objectives: ['Explain XDR vs EDR vs SIEM', 'Navigate incidents, alerts, evidence and attack story', 'Explain automated investigation and automatic attack disruption', 'Relate Defender XDR to Sentinel in the unified portal'],
+    prereqs: ['siem'], skills: ['defender'],
+    lessons: ['xdr-unified-incidents'],
+  },
+  {
+    id: 'mde', number: 20, title: 'Defender for Endpoint', track: 'microsoft', mode: 'both', status: 'outline',
+    blurb: 'Device inventory, timelines, process trees, response actions and Live Response.',
+    objectives: ['Device timeline investigation', 'Response actions incl. isolation and investigation packages', 'Automated investigation and response', 'Device groups and automation levels'],
+    prereqs: ['defender-xdr', 'windows'], skills: ['defender'], lessons: [], coveredIn: ['xdr-unified-incidents', 'comp-processes'],
+  },
+  {
+    id: 'mdo', number: 21, title: 'Defender for Office 365', track: 'microsoft', mode: 'both', status: 'outline',
+    blurb: 'Threat Explorer, campaigns, message investigation and remediation.',
+    objectives: ['Threat Explorer / Real-time detections', 'Email entity page', 'Remediation actions', 'Attack disruption for email-borne threats'],
+    prereqs: ['defender-xdr'], skills: ['defender'], lessons: [], coveredIn: ['ah-choose-table'],
+  },
+  {
+    id: 'mdi', number: 22, title: 'Defender for Identity', track: 'microsoft', mode: 'both', status: 'outline',
+    blurb: 'Domain controller sensors and the identity alerts they generate.',
+    objectives: ['How MDI collects identity signals', 'Identity alerts and their evidence', 'IdentityLogonEvents / IdentityQueryEvents'],
+    prereqs: ['active-directory', 'defender-xdr'], skills: ['identity', 'defender'], lessons: [], coveredIn: ['ah-choose-table'],
+  },
+  {
+    id: 'advanced-hunting', number: 23, title: 'Advanced Hunting', track: 'investigation', mode: 'both', status: 'ready',
+    blurb: 'Choosing the right Defender XDR table for a question — the skill SC-200 tests directly.',
+    objectives: ['Explain the problem each core table solves', 'Choose the right table for a question', 'Know key columns and when not to use a table', 'Build hunting queries and custom detections'],
+    prereqs: ['kql', 'defender-xdr'], skills: ['hunting', 'kql'],
+    lessons: ['ah-choose-table'],
+  },
+  {
+    id: 'incident-response', number: 24, title: 'Incident Response', track: 'investigation', mode: 'both', status: 'ready',
+    blurb: 'From alert to lessons learned — the lifecycle, decisions and documentation of a response.',
+    objectives: ['Walk through triage, investigation, scoping, containment, eradication, recovery, lessons learned', 'Choose proportionate containment', 'Document decisions for handover', 'Relate IR phases to Defender and Sentinel actions'],
+    prereqs: ['soc', 'defender-xdr'], skills: ['ir'],
+    lessons: ['ir-lifecycle'],
+  },
+  {
+    id: 'detection-engineering', number: 25, title: 'Detection Engineering', track: 'investigation', mode: 'both', status: 'outline',
+    blurb: 'Hypothesis → query → test → tune → deploy. Sentinel analytics rules and Defender custom detections.',
+    objectives: ['Detection lifecycle', 'Tuning and false-positive handling', 'MITRE mapping of detections', 'Custom detection rules in Defender XDR'],
+    prereqs: ['kql', 'sentinel'], skills: ['sentinel', 'mitre'], lessons: [], coveredIn: ['sentinel-analytics-rules', 'mitre-framework'],
+  },
+  {
+    id: 'soar', number: 26, title: 'SOAR & Automation', track: 'investigation', mode: 'both', status: 'outline',
+    blurb: 'Automation rules, playbooks and Logic Apps — and when not to automate.',
+    objectives: ['Automation rules vs playbooks', 'Logic Apps connectors and actions', 'Safe automated remediation', 'When automation should stay human-approved'],
+    prereqs: ['sentinel'], skills: ['sentinel'], lessons: [], coveredIn: ['sentinel-analytics-rules'],
+  },
+  {
+    id: 'threat-hunting', number: 27, title: 'Threat Hunting', track: 'investigation', mode: 'both', status: 'outline',
+    blurb: 'Hypothesis-driven hunting with Sentinel hunting queries, data lake KQL jobs and notebooks.',
+    objectives: ['What hunting is and why it exists', 'Forming testable hypotheses', 'Hunting queries and bookmarks in Sentinel', 'Sentinel data lake KQL jobs and summary rules'],
+    prereqs: ['advanced-hunting'], skills: ['hunting'], lessons: [], coveredIn: ['ah-choose-table', 'mitre-framework'],
+  },
+  {
+    id: 'sc200', number: 44, title: 'SC-200 Certification Academy', track: 'cert', mode: 'exam', status: 'ready',
+    blurb: 'Every objective in the official skills outline mapped to lessons, products, labs and practice questions.',
+    objectives: ['Map each official objective to prerequisite lessons', 'Separate exam knowledge from real SOC knowledge', 'Practice with explained questions and weak-area tracking'],
+    prereqs: [], skills: ['sentinel', 'defender', 'kql'], lessons: [],
+  },
+  {
+    id: 'interview', number: 34, title: 'Interview Academy', track: 'career', mode: 'soc', status: 'ready',
+    blurb: 'Explain concepts out loud, check your answer against key points, and practice follow-ups.',
+    objectives: ['Answer beginner, intermediate and advanced questions', 'Explain reasoning, not definitions', 'Handle follow-up questions'],
+    prereqs: [], skills: ['soc'], lessons: [],
+  },
+  {
+    id: 'ticket-writing', number: 33, title: 'SOC Ticket Writing', track: 'career', mode: 'soc', status: 'ready',
+    blurb: 'How to write incident notes another analyst can act on — with weak and improved examples.',
+    objectives: ['Use a consistent ticket template', 'Separate facts, assessment and recommendations', 'Write for the next shift'],
+    prereqs: ['soc'], skills: ['soc', 'ir'], lessons: [],
+  },
+  {
+    id: 'projects', number: 42, title: 'Portfolio Project Builder', track: 'career', mode: 'soc', status: 'outline',
+    blurb: 'GitHub-ready project templates you build in your own free lab environment.',
+    objectives: ['Plan a project in your own lab', 'Document objective, architecture, query and findings', 'Turn completed work into honest resume bullets'],
+    prereqs: ['kql', 'sentinel'], skills: ['kql', 'sentinel'], lessons: [],
+  },
+]
+
+export const moduleById = (id: string) => MODULES.find(m => m.id === id)
