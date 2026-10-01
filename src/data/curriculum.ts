@@ -25,7 +25,7 @@ export const TRACKS: { id: string; title: string; modules: string[] }[] = [
   { id: 'identity', title: 'Identity', modules: ['active-directory', 'entra-id', 'identity-security'] },
   { id: 'security', title: 'Security Concepts', modules: ['cyber-fundamentals', 'malware', 'phishing'] },
   { id: 'soc', title: 'SOC', modules: ['soc', 'logging', 'siem', 'threat-intel', 'mitre'] },
-  { id: 'microsoft', title: 'Microsoft Security', modules: ['sentinel', 'defender-xdr', 'mde', 'mdo', 'mdi'] },
+  { id: 'microsoft', title: 'Microsoft Security', modules: ['sentinel', 'defender-xdr', 'mde', 'mdo', 'mdi', 'cloud-security', 'm365-investigation'] },
   { id: 'investigation', title: 'Investigation', modules: ['kql', 'advanced-hunting', 'incident-response', 'detection-engineering', 'soar', 'threat-hunting'] },
   { id: 'cert', title: 'Certification', modules: ['sc200'] },
   { id: 'career', title: 'Career', modules: ['interview', 'ticket-writing', 'projects'] },
@@ -34,7 +34,7 @@ export const TRACKS: { id: string; title: string; modules: string[] }[] = [
 /** Recommended learning order (brief §1). */
 export const LEARNING_PATH = [
   'orientation', 'computers', 'networking', 'windows', 'linux', 'active-directory', 'entra-id', 'identity-security', 'cyber-fundamentals', 'malware', 'phishing',
-  'soc', 'threat-intel', 'mitre', 'logging', 'siem', 'kql', 'sentinel', 'defender-xdr', 'mde', 'mdo', 'mdi',
+  'soc', 'threat-intel', 'mitre', 'logging', 'siem', 'kql', 'sentinel', 'defender-xdr', 'mde', 'mdo', 'mdi', 'cloud-security', 'm365-investigation',
   'advanced-hunting', 'incident-response', 'detection-engineering', 'soar', 'threat-hunting', 'sc200',
   'interview', 'ticket-writing', 'projects',
 ]
@@ -198,7 +198,7 @@ export const MODULES: Module[] = [
     id: 'mde', number: 20, title: 'Defender for Endpoint', track: 'microsoft', mode: 'both', status: 'ready',
     blurb: 'Device inventory, timelines, process trees, response actions and Live Response.',
     objectives: ['Investigate alert stories, process trees and device timelines', 'Explain ASR rules and review them in audit mode', 'Choose proportionate response actions: isolate, restrict, collect, live response', 'Explain device groups, automation levels and the Action center'],
-    prereqs: ['defender-xdr', 'windows'], skills: ['defender'], lessons: ['mde-device-investigation', 'mde-response-actions'],
+    prereqs: ['defender-xdr', 'windows'], skills: ['defender'], lessons: ['mde-device-investigation', 'mde-response-actions', 'mde-indicators-tuning'],
   },
   {
     id: 'mdo', number: 21, title: 'Defender for Office 365', track: 'microsoft', mode: 'both', status: 'ready',
@@ -211,6 +211,18 @@ export const MODULES: Module[] = [
     blurb: 'Domain controller sensors and the identity alerts they generate.',
     objectives: ['How MDI collects identity signals', 'Identity alerts and their evidence', 'IdentityLogonEvents / IdentityQueryEvents'],
     prereqs: ['active-directory', 'defender-xdr'], skills: ['identity', 'defender'], lessons: ['mdi-identity-alerts'],
+  },
+  {
+    id: 'cloud-security', number: 28, title: 'Defender for Cloud & Cloud Apps', track: 'microsoft', mode: 'both', status: 'ready',
+    blurb: 'Cloud workload alerts for VMs, storage, key vaults and the management plane — plus shadow IT and risky OAuth apps.',
+    objectives: ['Explain Defender for Cloud posture management vs workload protection', 'Investigate Defender for Cloud alerts and respond with cloud-native actions', 'Explain Defender for Cloud Apps capabilities and app governance', 'Investigate and remediate consent phishing and risky OAuth apps'],
+    prereqs: ['computers', 'entra-id', 'defender-xdr'], skills: ['defender', 'identity'], lessons: ['mdc-workload-alerts', 'mdca-oauth-apps'],
+  },
+  {
+    id: 'm365-investigation', number: 29, title: 'Microsoft 365 Investigation', track: 'microsoft', mode: 'both', status: 'ready',
+    blurb: 'Purview DLP, insider risk, audit and content search — and Microsoft Graph activity logs for API-level evidence.',
+    objectives: ['Triage DLP and insider risk alerts with identity context', 'Use Purview Audit (Standard vs Premium) and MailItemsAccessed', 'Find and remove content with eDiscovery content search', 'Scope token theft with Microsoft Graph activity logs'],
+    prereqs: ['phishing', 'entra-id', 'kql'], skills: ['ir', 'identity'], lessons: ['purview-alerts', 'graph-activity-logs'],
   },
   {
     id: 'advanced-hunting', number: 23, title: 'Advanced Hunting', track: 'investigation', mode: 'both', status: 'ready',
@@ -242,7 +254,7 @@ export const MODULES: Module[] = [
     id: 'threat-hunting', number: 27, title: 'Threat Hunting', track: 'investigation', mode: 'both', status: 'ready',
     blurb: 'Hypothesis-driven hunting with Sentinel hunting queries, data lake KQL jobs and notebooks.',
     objectives: ['What hunting is and why it exists', 'Forming testable hypotheses', 'Hunting queries and bookmarks in Sentinel', 'Sentinel data lake KQL jobs and summary rules'],
-    prereqs: ['advanced-hunting'], skills: ['hunting'], lessons: ['hunt-hypothesis'],
+    prereqs: ['advanced-hunting'], skills: ['hunting'], lessons: ['hunt-hypothesis', 'hunt-graphs-blast-radius'],
   },
   {
     id: 'sc200', number: 44, title: 'SC-200 Certification Academy', track: 'cert', mode: 'exam', status: 'ready',

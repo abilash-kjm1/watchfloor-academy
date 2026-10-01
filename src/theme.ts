@@ -1,7 +1,7 @@
 import {
   Compass, Cpu, Network, MonitorSmartphone, TerminalSquare, Fingerprint, KeyRound, ShieldHalf, Bug, MailWarning, UserCheck,
   Crosshair, Radar, ScrollText, Database, Search, Shield, Layers, Laptop, Mail, Users, Telescope, Siren, FlaskConical, Workflow,
-  Binoculars, GraduationCap, MessagesSquare, FileText, Briefcase, Rocket, Boxes, BookOpen, type LucideIcon,
+  Binoculars, GraduationCap, MessagesSquare, FileText, Briefcase, Rocket, Boxes, BookOpen, Cloud, FileSearch, type LucideIcon,
 } from 'lucide-react'
 import type { CSSProperties } from 'react'
 
@@ -30,7 +30,7 @@ export const MODULE_ICON: Record<string, LucideIcon> = {
   'active-directory': Users, 'entra-id': KeyRound, 'identity-security': UserCheck,
   'cyber-fundamentals': ShieldHalf, malware: Bug, phishing: MailWarning,
   soc: Radar, logging: ScrollText, siem: Database, 'threat-intel': Telescope, mitre: Crosshair,
-  sentinel: Shield, 'defender-xdr': Layers, mde: Laptop, mdo: Mail, mdi: Fingerprint,
+  sentinel: Shield, 'defender-xdr': Layers, mde: Laptop, mdo: Mail, mdi: Fingerprint, 'cloud-security': Cloud, 'm365-investigation': FileSearch,
   kql: Search, 'advanced-hunting': Binoculars, 'incident-response': Siren, 'detection-engineering': FlaskConical,
   soar: Workflow, 'threat-hunting': Binoculars, sc200: GraduationCap, interview: MessagesSquare,
   'ticket-writing': FileText, projects: Rocket,
