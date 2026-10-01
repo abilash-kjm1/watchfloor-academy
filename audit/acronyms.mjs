@@ -6,7 +6,7 @@ const data = await server.ssrLoadModule('/src/data/index.ts')
 
 const CORE = ['SOC', 'DNS', 'TCP', 'UDP', 'HTTP', 'HTTPS', 'SSH', 'RDP', 'SMB', 'LDAP', 'DHCP', 'SMTP', 'MFA', 'IOC', 'IOA', 'TTP',
   'SIEM', 'EDR', 'XDR', 'SOAR', 'AD', 'DC', 'JSON', 'CEF', 'AMA', 'DCR', 'NAT', 'WEF', 'PIM', 'SQL', 'NRT', 'AIR', 'ASIM', 'MSSP',
-  'CDN', 'TTL', 'SPF', 'STIX', 'TAXII', 'NTLM', 'SAMR', 'API', 'KQL', 'UTC', 'PID', 'OS', 'CPU', 'RAM', 'IR', 'FQDN', 'UPN', 'RBAC', 'ASR', 'MTTD', 'MTTR', 'NOC']
+  'CDN', 'TTL', 'SPF', 'STIX', 'TAXII', 'NTLM', 'SAMR', 'API', 'KQL', 'UTC', 'PID', 'OS', 'CPU', 'RAM', 'IR', 'FQDN', 'UPN', 'RBAC', 'ASR', 'MTTD', 'MTTR', 'NOC', 'DKIM', 'DMARC', 'BEC', 'ZAP', 'EOP', 'MDE', 'MDO', 'PRT', 'SaaS']
 
 const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 // A definition looks like "Full Name (ACR)" or "ACR (Full Name" or "ACR — ..." or "**ACR**" heading-style.

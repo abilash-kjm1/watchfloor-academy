@@ -4,11 +4,12 @@ import { socLessons } from './lessons/soc'
 import { foundationLessons } from './lessons/foundations'
 import { analysisLessons } from './lessons/analysis'
 import { microsoftLessons } from './lessons/microsoft'
+import { identityEmailEndpointLessons } from './lessons/identity-email-endpoint'
 import { MODULES, LEARNING_PATH } from './curriculum'
 import { EXAM_QUESTIONS } from './sc200'
 import { LESSON_TEXT } from './lessons/text'
 
-export const LESSONS: Lesson[] = [...orientationLessons, ...socLessons, ...foundationLessons, ...analysisLessons, ...microsoftLessons]
+export const LESSONS: Lesson[] = [...orientationLessons, ...socLessons, ...foundationLessons, ...analysisLessons, ...microsoftLessons, ...identityEmailEndpointLessons]
   .map(l => { const t = LESSON_TEXT[l.id]; return { ...l, sections: t?.sections ?? {}, bridge: t?.bridge, explainBack: t?.explainBack } })
 export const lessonById = new Map(LESSONS.map(l => [l.id, l]))
 

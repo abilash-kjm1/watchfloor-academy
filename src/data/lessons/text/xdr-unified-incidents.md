@@ -28,7 +28,7 @@ It groups related alerts into **one incident** and lets you respond across all o
 - Defender for **Endpoint** — devices
 - Defender for **Office 365** — email and collaboration
 - Defender for **Identity** — on-premises Active Directory ("on-premises" means running on the company's own servers rather than in the cloud)
-- Defender for **Cloud Apps** — SaaS applications
+- Defender for **Cloud Apps** — SaaS (Software as a Service) applications: cloud software you use through a browser, such as Salesforce or Box
 - …and more.
 
 ### SIEM vs EDR vs XDR vs SOAR

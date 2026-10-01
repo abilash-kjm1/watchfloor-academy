@@ -33,7 +33,7 @@ export const TRACKS: { id: string; title: string; modules: string[] }[] = [
 
 /** Recommended learning order (brief §1). */
 export const LEARNING_PATH = [
-  'orientation', 'computers', 'networking', 'windows', 'linux', 'active-directory', 'entra-id', 'cyber-fundamentals',
+  'orientation', 'computers', 'networking', 'windows', 'linux', 'active-directory', 'entra-id', 'cyber-fundamentals', 'phishing',
   'soc', 'threat-intel', 'mitre', 'logging', 'siem', 'kql', 'sentinel', 'defender-xdr', 'mde', 'mdo', 'mdi',
   'advanced-hunting', 'incident-response', 'detection-engineering', 'soar', 'threat-hunting', 'sc200',
   'interview', 'ticket-writing', 'projects',
@@ -109,10 +109,10 @@ export const MODULES: Module[] = [
     prereqs: ['windows', 'networking'], skills: ['identity'], lessons: [], coveredIn: ['comp-users-permissions', 'win-event-logs'],
   },
   {
-    id: 'entra-id', number: 7, title: 'Microsoft Entra ID', track: 'identity', mode: 'both', status: 'outline',
+    id: 'entra-id', number: 7, title: 'Microsoft Entra ID', track: 'identity', mode: 'both', status: 'ready',
     blurb: 'Cloud identity: sign-in and audit logs, MFA, Conditional Access, Identity Protection.',
-    objectives: ['Users, groups, roles, applications and service principals', 'MFA and Conditional Access', 'Sign-in logs vs audit logs', 'Risky users and risky sign-ins'],
-    prereqs: ['active-directory'], skills: ['identity'], lessons: [], coveredIn: ['log-anatomy', 'xdr-unified-incidents'],
+    objectives: ['Explain users, groups, roles, applications and service principals', 'Read interactive and non-interactive sign-in logs and audit logs', 'Explain MFA, Conditional Access (signals → decision → enforcement) and their licensing', 'Distinguish user risk from sign-in risk and investigate risky users', 'Remediate a compromised identity: revoke sessions, reset, remove attacker changes'],
+    prereqs: ['active-directory'], skills: ['identity'], lessons: ['entra-signins-audit', 'entra-ca-risk'],
   },
   {
     id: 'cyber-fundamentals', number: 8, title: 'Cybersecurity Fundamentals', track: 'security', mode: 'soc', status: 'outline',
@@ -127,10 +127,10 @@ export const MODULES: Module[] = [
     prereqs: ['computers', 'networking'], skills: ['defender'], lessons: [], coveredIn: ['soc-ioc-ioa-ttp', 'comp-processes'],
   },
   {
-    id: 'phishing', number: 10, title: 'Phishing & Email Security', track: 'security', mode: 'both', status: 'outline',
+    id: 'phishing', number: 10, title: 'Phishing & Email Security', track: 'security', mode: 'both', status: 'ready',
     blurb: 'Email anatomy, SPF/DKIM/DMARC, and investigation in Defender for Office 365.',
-    objectives: ['Email headers and authentication results', 'SPF, DKIM and DMARC', 'Reported message triage', 'Defender for Office 365 investigation and remediation'],
-    prereqs: ['networking'], skills: ['defender'], lessons: [], coveredIn: ['ah-choose-table'],
+    objectives: ['Read email headers: From, Reply-To, MAIL FROM, Authentication-Results', 'Explain SPF, DKIM and DMARC and what they cannot prove', 'Recognize credential phishing, malicious attachments, BEC and adversary-in-the-middle phishing', 'Triage a reported email safely'],
+    prereqs: ['networking'], skills: ['defender'], lessons: ['phish-email-auth'],
   },
   {
     id: 'identity-security', number: 11, title: 'Identity & Authentication Security', track: 'identity', mode: 'both', status: 'outline',
@@ -192,16 +192,16 @@ export const MODULES: Module[] = [
     lessons: ['xdr-unified-incidents'],
   },
   {
-    id: 'mde', number: 20, title: 'Defender for Endpoint', track: 'microsoft', mode: 'both', status: 'outline',
+    id: 'mde', number: 20, title: 'Defender for Endpoint', track: 'microsoft', mode: 'both', status: 'ready',
     blurb: 'Device inventory, timelines, process trees, response actions and Live Response.',
-    objectives: ['Device timeline investigation', 'Response actions incl. isolation and investigation packages', 'Automated investigation and response', 'Device groups and automation levels'],
-    prereqs: ['defender-xdr', 'windows'], skills: ['defender'], lessons: [], coveredIn: ['xdr-unified-incidents', 'comp-processes'],
+    objectives: ['Investigate alert stories, process trees and device timelines', 'Explain ASR rules and review them in audit mode', 'Choose proportionate response actions: isolate, restrict, collect, live response', 'Explain device groups, automation levels and the Action center'],
+    prereqs: ['defender-xdr', 'windows'], skills: ['defender'], lessons: ['mde-device-investigation', 'mde-response-actions'],
   },
   {
-    id: 'mdo', number: 21, title: 'Defender for Office 365', track: 'microsoft', mode: 'both', status: 'outline',
+    id: 'mdo', number: 21, title: 'Defender for Office 365', track: 'microsoft', mode: 'both', status: 'ready',
     blurb: 'Threat Explorer, campaigns, message investigation and remediation.',
-    objectives: ['Threat Explorer / Real-time detections', 'Email entity page', 'Remediation actions', 'Attack disruption for email-borne threats'],
-    prereqs: ['defender-xdr'], skills: ['defender'], lessons: [], coveredIn: ['ah-choose-table'],
+    objectives: ['Explain Defender for Office 365 Plan 1 vs Plan 2', 'Use Explorer / Real-time detections to scope a campaign', 'Find clicks with Safe Links data and remediate messages', 'Check identity and endpoint consequences of a phishing click'],
+    prereqs: ['defender-xdr'], skills: ['defender'], lessons: ['mdo-phish-investigation'],
   },
   {
     id: 'mdi', number: 22, title: 'Defender for Identity', track: 'microsoft', mode: 'both', status: 'outline',
