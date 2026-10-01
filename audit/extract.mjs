@@ -16,6 +16,7 @@ const queries = []
 const fence = /```kql\n([\s\S]*?)```/g
 for (const l of data.LESSONS) {
   for (const k of l.kql ?? []) queries.push({ where: `lesson:${l.id}:kql:${k.title}`, query: k.query })
+  if (l.story?.kql) queries.push({ where: `lesson:${l.id}:story`, query: l.story.kql.query })
   for (const t of [...Object.values(l.sections), ...(l.deepDives ?? []).map(d => d.body)])
     for (const m of t.matchAll(fence)) queries.push({ where: `lesson:${l.id}:text`, query: m[1] })
 }

@@ -4,7 +4,7 @@ import {
   ArrowLeft, ArrowRight, Bookmark, CheckCircle2, ChevronDown, Circle, CircleDot, Clock, ExternalLink, Eye, Compass, Target, Signpost,
   HelpCircle, Lightbulb, Tag, Puzzle, Sparkles, Cog, Workflow, Globe, ShieldAlert, ShieldCheck, Swords, FileSearch, MapPin, UserSearch,
   Shield, Terminal, Crosshair, GraduationCap, FlaskConical, ListChecks, MessageCircle, MessagesSquare, AlertTriangle, Radio, Brain, KeyRound, Link2,
-  BookOpen, StickyNote, PartyPopper, type LucideIcon,
+  BookOpen, StickyNote, PartyPopper, Siren, type LucideIcon,
 } from 'lucide-react'
 import { lessonById, nextLesson, prevLesson, ORDERED_LESSONS } from '../data'
 import { moduleById } from '../data/curriculum'
@@ -20,6 +20,7 @@ import { ResourceCards } from '../components/Resources'
 import { NotesPanel } from '../components/NotesPanel'
 import { Callout, IconBadge, ModeBadge, SectionTitle, cx } from '../components/ui'
 import { lessonVars, moduleIcon, trackTheme } from '../theme'
+import { EvidenceTrail, InvestigateBox, InvestigationMoment, KqlWalkthrough, Limits, Perspectives, StoryChain, StoryOpener, StoryTimeline, WhatIf } from '../components/Story'
 import NotFound from './NotFound'
 
 const LEVEL_LABEL: Record<string, string> = { beginner: 'Beginner', understand: 'Understand', recognize: 'Recognize', practice: 'Practice', investigate: 'Investigate', analyze: 'Analyze', hunt: 'Hunt', detect: 'Create detection' }
@@ -35,6 +36,7 @@ const DEPTH_LEVELS: Record<number, { title: string; blurb: string; color: string
   5: { title: 'Microsoft tools', blurb: 'Which Microsoft products see this evidence.', color: 'var(--t-microsoft)', icon: Shield },
   6: { title: 'Query the evidence', blurb: 'KQL that finds it.', color: 'var(--t-investigation)', icon: Terminal },
   7: { title: 'Detection & frameworks', blurb: 'MITRE ATT&CK and SC-200 connections.', color: 'var(--t-cert)', icon: Crosshair },
+  9: { title: 'The investigation story', blurb: 'Put it all together in a realistic case: story → twist → evidence → correlation → investigation → KQL → response.', color: 'var(--danger)', icon: Siren },
   8: { title: 'Practice & review', blurb: 'Lab, quiz, explain-it-back, interview and recap.', color: 'var(--t-career)', icon: GraduationCap },
 }
 
@@ -44,6 +46,8 @@ const SECTION_ICON: Record<string, LucideIcon> = {
   analyst: UserSearch, microsoft: Shield, kql: Terminal, mitre: Crosshair, sc200: GraduationCap, lab: FlaskConical, quiz: ListChecks,
   'explain-back': MessageCircle, interview: MessagesSquare, mistakes: AlertTriangle, tip: Radio, think: Brain, takeaways: KeyRound,
   connect: Link2, resources: BookOpen, notes: StickyNote,
+  story: BookOpen, perspectives: Swords, 'evidence-trail': FileSearch, timeline: Clock, moment: Siren, investigate: Brain,
+  'story-kql': Terminal, 'what-if': HelpCircle, limits: AlertTriangle, 'story-chain': Link2,
 }
 
 /**
@@ -163,6 +167,20 @@ function buildSections(l: Lesson, isPreview: (prereq: string) => boolean): Sec[]
     <ul className="grid gap-2 sm:grid-cols-2">{l.takeaways.map(t => <li key={t} className="flex gap-2.5 rounded-xl border border-base p-3 text-[15px] leading-relaxed"><CheckCircle2 size={18} className="mt-0.5 shrink-0" style={{ color: 'var(--ok)' }} aria-hidden />{t}</li>)}</ul>
   ))
   add(8, 'connect', 'Connect the dots', <ConnectDots chain={l.connect} currentLessonId={l.id} />)
+  // Final level — the investigation story: apply everything above to a realistic case
+  const st = l.story
+  if (st) {
+    add(9, 'story', 'What happened?', <StoryOpener story={st} />)
+    add(9, 'perspectives', 'Attacker view vs defender view', <Perspectives panels={st.panels} />)
+    add(9, 'evidence-trail', 'Follow the evidence', <EvidenceTrail evidence={st.evidence} scenarios={st.scenarios} />)
+    add(9, 'timeline', 'Build the timeline', <StoryTimeline timeline={st.timeline} />)
+    add(9, 'moment', 'Investigation moment', <InvestigationMoment moment={st.moment} />)
+    add(9, 'investigate', 'Before, during and after', <InvestigateBox story={st} />)
+    add(9, 'story-kql', 'Query the evidence, step by step', st.kql && <KqlWalkthrough kql={st.kql} />)
+    add(9, 'what-if', 'What if…?', <WhatIf items={st.whatIf} />)
+    add(9, 'limits', 'Limitations: what this can and cannot tell you', <Limits limits={st.limits} />)
+    add(9, 'story-chain', 'Connect the dots and respond', <StoryChain story={st} />)
+  }
   return out
 }
 
@@ -330,7 +348,7 @@ export default function LessonPage() {
   }, [id])
   const order = (x: string) => ORDERED_LESSONS.findIndex(o => o.id === x)
   const secs = l ? buildSections(l, pre => !p.completed[pre] && order(l.id) < order(pre)) : []
-  const navItems = [...secs.map(s => ({ id: s.id, title: s.title, level: s.level })), { id: 'resources', title: 'Resources', level: 9 }, { id: 'notes', title: 'Your notes', level: 9 }]
+  const navItems = [...secs.map(s => ({ id: s.id, title: s.title, level: s.level })), { id: 'resources', title: 'Resources', level: 10 }, { id: 'notes', title: 'Your notes', level: 10 }]
   const { active, pct } = useScrollSpy(navItems.map(s => s.id))
   useEffect(() => setMenuOpen(false), [active])
   if (!l) return <NotFound />
@@ -391,6 +409,11 @@ export default function LessonPage() {
               {lessonIdx >= 0 && <><span aria-hidden>/</span><span>Lesson {lessonIdx + 1} of {m!.lessons.length}</span></>}
             </nav>
             <h1 className="relative font-serif text-3xl font-semibold leading-tight md:text-4xl">{l.title}</h1>
+            {l.story && (
+              <a href="#story" onClick={jump('story')} className="relative mt-3 inline-flex items-center gap-1.5 rounded-lg bg-white/15 px-2.5 py-1 text-sm font-semibold text-white/95 hover:bg-white/25">
+                <Siren size={14} aria-hidden /> Ends with the investigation story: “{l.story.title}”
+              </a>
+            )}
             <p className="relative mt-3 max-w-2xl text-lg leading-relaxed text-white/85">{l.summary}</p>
             <div className="relative mt-5 flex flex-wrap items-center gap-2">
               <ModeBadge mode={l.mode} />
@@ -445,7 +468,7 @@ export default function LessonPage() {
                     <div className="mb-10 flex items-center gap-4 rounded-2xl p-4" style={{ background: `linear-gradient(90deg, color-mix(in srgb, ${lv.color} 13%, var(--surface)), transparent)` }}>
                       <IconBadge icon={lv.icon} color={lv.color} solid />
                       <div>
-                        <div className="text-xs font-bold uppercase tracking-wider" style={{ color: lv.color }}>Level {s.level} of 8</div>
+                        <div className="text-xs font-bold uppercase tracking-wider" style={{ color: lv.color }}>{s.level === 9 ? 'Final step · apply what you learned' : `Level ${s.level} of 8`}</div>
                         <div className="font-semibold">{lv.title}</div>
                         <div className="text-sm muted">{lv.blurb}</div>
                       </div>
@@ -517,10 +540,10 @@ export default function LessonPage() {
             <ul className="space-y-0.5 text-[13px]">
               {navItems.map((s, i) => {
                 const st = state(i)
-                const header = s.level <= 8 && (i === 0 || navItems[i - 1].level !== s.level)
+                const header = s.level <= 9 && (i === 0 || navItems[i - 1].level !== s.level)
                 return (
                   <li key={s.id}>
-                    {header && <div className="mb-0.5 mt-2 px-2 text-[10px] font-bold uppercase tracking-wider" style={{ color: DEPTH_LEVELS[s.level].color }}>L{s.level} · {DEPTH_LEVELS[s.level].title}</div>}
+                    {header && <div className="mb-0.5 mt-2 px-2 text-[10px] font-bold uppercase tracking-wider" style={{ color: DEPTH_LEVELS[s.level].color }}>{s.level === 9 ? 'Story' : `L${s.level}`} · {DEPTH_LEVELS[s.level].title}</div>}
                     <a href={`#${s.id}`} onClick={jump(s.id)} aria-current={st === 'current' ? 'location' : undefined}
                       className={cx('flex items-center gap-2 rounded-lg px-2 py-1 transition hover:bg-[var(--surface-2)]', st === 'current' ? 'font-semibold' : st === 'done' ? 'muted' : '')}
                       style={st === 'current' ? { background: th.soft, color: th.color } : undefined}>

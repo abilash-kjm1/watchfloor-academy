@@ -75,7 +75,48 @@ export const SECTION_ORDER = [
 ] as const
 export type SectionKey = (typeof SECTION_ORDER)[number][0]
 
+/**
+ * Story-driven teaching layer: REALISTIC STORY → ATTACK → TWIST → EVIDENCE → LIMITATION →
+ * CORRELATION → INVESTIGATION → KQL → MICROSOFT → MITRE → DETECTION → RESPONSE.
+ * Everything here is defensive: what happened, what evidence it left, how analysts reason.
+ */
+export type Tone = 'neutral' | 'normal' | 'suspicious' | 'malicious'
+export interface Story {
+  /** Story-driven title, shown above the technical title. */
+  title: string
+  /** One or two sentences that set the scene. */
+  hook: string
+  /** Story beats, revealed one at a time. */
+  scenes: string[]
+  /** Usually two: the evidence appears; then "one clue is not enough". */
+  twists: { title: string; body: string }[]
+  /** Attacker view / defender view / next investigation question. */
+  panels: { attacker: string; defender: string; question: string }[]
+  /** What happened → what evidence → where stored → can it be tampered with → was it forwarded → can we still investigate. */
+  evidence: { happened: string; created: string; stored: string; tamper: string; forwarded: string; still: string }
+  scenarios: { normal: string; suspicious: string; malicious: string }
+  timeline: { title: string; entries: { time: string; code?: string; label: string; detail: string; tone?: Tone }[]; question: string; answer: string }
+  moment: { prompt: string; options: { text: string; feedback: string; best?: boolean }[] }
+  before: string[]
+  during: string[]
+  after: string[]
+  thinking: { dont: string; ask: string[] }
+  whatIf: { q: string; a: string }[]
+  limits: { detects: string; misses: string; dependsOn: string; falsePositives: string; evasion: string; confidence: string }
+  kql?: {
+    goal: string; table: string; whyTable: string; query: string
+    lines: { code: string; meaning: string }[]
+    normal: string; suspicious: string; enough: string; next: string
+  }
+  /** Connect-the-dots chain from attacker action to SOC investigation. */
+  chain: string[]
+  chainExplained: string
+  response: string[]
+}
+
 export interface Lesson {
+  /** Story-driven teaching layer (optional; rendered before the reference sections). */
+  story?: Story
   id: string
   moduleId: string
   title: string

@@ -218,6 +218,13 @@ INTERVIEW.push(
     tip: 'Contrast "what happened" (alerts) with "what could happen next" (blast radius).', followUp: 'The blast radius includes a production key vault. What do you do immediately?' },
 )
 
+INTERVIEW.push(
+  { id: 'iv-log-clearing', level: 'intermediate', skill: 'windows', lessonId: 'win-log-clearing', question: 'You get an alert for Windows Event ID 1102. Walk me through your investigation.',
+    points: [p('1102 means the Security log was cleared — a clue, not proof', 'cleared', 'clue', 'not proof', 'context', 'legitimate'), p('Identify account and Logon ID / session', 'account', 'logon id', 'session', 'who'), p('Look at what happened before: 4624, 4672, 4688, network', '4624', '4672', '4688', 'before', 'process'), p('Check SIEM / forwarded copies and EDR', 'siem', 'sentinel', 'forward', 'edr', 'defender'), p('Decide and respond: expected change vs compromise', 'change', 'ticket', 'isolate', 'reset', 'escalat')],
+    model: '1102 tells me the Security log was cleared and by which account and session, but not why — admins can do it legitimately, attackers do it to hide. So I treat it as a clue. I identify the account and its Logon ID, check whether it\'s expected on that machine and whether there\'s a change ticket, and then look at what happened before in the SIEM, because forwarded events survive local clearing: the 4624 that started the session, any 4672, the processes in 4688 and network activity from EDR. If one unusual session logged on, got privileges, ran something suspicious and then cleared the log, I treat it as a compromise: isolate the host, reset the account, scope other machines.',
+    tip: 'Say "the 30 minutes before the clearing" — it shows you think in timelines.', followUp: 'What if the machine stopped sending events instead of producing a 1102?' },
+)
+
 export const interviewById = new Map(INTERVIEW.map(q => [q.id, q]))
 
 export interface AnswerReview { covered: string[]; missing: string[]; score: number }

@@ -97,7 +97,7 @@ export const MODULES: Module[] = [
       'Know which Microsoft tables carry Windows evidence',
     ],
     prereqs: ['computers'], skills: ['windows'],
-    lessons: ['win-event-logs'],
+    lessons: ['win-event-logs', 'win-log-clearing'],
   },
   {
     id: 'linux', number: 5, title: 'Linux Security', track: 'foundations', mode: 'soc', status: 'ready',
