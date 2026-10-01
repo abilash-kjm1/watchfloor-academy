@@ -62,15 +62,18 @@ export const MODULES: Module[] = [
   },
   {
     id: 'computers', number: 2, title: 'Computer Fundamentals', track: 'foundations', mode: 'soc', status: 'ready',
-    blurb: 'Processes, services, users and permissions — the building blocks that every piece of endpoint evidence describes.',
+    blurb: 'Hardware, operating system, files, servers, VMs, cloud, processes and permissions — the building blocks every piece of evidence describes.',
     objectives: [
-      'Explain CPU, memory, storage, OS and kernel vs user space in security terms',
+      'Explain CPU, memory (RAM), storage and the operating system, and why each matters to security',
+      'Explain kernel mode vs user mode and why privilege levels protect the system',
+      'Explain files, file systems (paths, permissions, timestamps) and why file names can mislead',
+      'Explain client/server, virtual machines and cloud models (IaaS, PaaS, SaaS) and the shared responsibility model',
       'Distinguish programs, processes, threads and services',
       'Read a process tree and explain why parent-child relationships matter',
       'Explain users, groups and permissions and the principle of least privilege',
     ],
     prereqs: ['orientation'], skills: ['computers'],
-    lessons: ['comp-processes', 'comp-users-permissions'],
+    lessons: ['comp-hardware-os', 'comp-files-systems', 'comp-processes', 'comp-users-permissions'],
   },
   {
     id: 'networking', number: 3, title: 'Networking Fundamentals', track: 'foundations', mode: 'soc', status: 'ready',

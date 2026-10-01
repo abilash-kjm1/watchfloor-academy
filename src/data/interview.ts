@@ -133,6 +133,17 @@ INTERVIEW.push(
     tip: 'Mention business impact — it shows judgement, not just knowledge of the buttons.', followUp: 'The device is a domain controller. What changes in your approach?' },
 )
 
+INTERVIEW.push(
+  { id: 'iv-hardware-security', level: 'beginner', skill: 'computers', lessonId: 'comp-hardware-os', question: 'Why does a SOC analyst need to understand CPU, memory, storage and the operating system?',
+    points: [p('CPU: unexplained high use can reveal unwanted software (e.g. mining)', 'cpu', 'mining', 'miner'), p('Memory: volatile, holds running code and secrets; lost at power-off', 'memory', 'ram', 'volatile', 'power'), p('Storage: persistence and ransomware act on disk', 'storage', 'disk', 'ransomware', 'persist'), p('OS: kernel vs user mode; patches fix vulnerabilities', 'kernel', 'user mode', 'patch', 'update'), p('Practical decision: isolate rather than power off', 'isolat', 'power off', 'switch off', 'evidence')],
+    model: 'Every piece of endpoint evidence describes one of these parts. Unexplained high CPU can reveal unwanted software such as a hidden miner. Memory is volatile — it holds running programs and sometimes sign-in secrets, and it\'s lost when the machine is switched off, so we usually isolate a compromised device rather than power it down. Storage is where persistence and ransomware act, so file changes are key evidence. And the operating system\'s split between kernel and user mode is what stops one program taking over the machine — which is why unpatched OS vulnerabilities and malicious drivers are so serious.',
+    tip: 'Tie each part to one concrete investigation decision — that turns textbook knowledge into analyst thinking.', followUp: 'A user reports their files suddenly have strange extensions. Which part is affected and what do you do first?' },
+  { id: 'iv-cloud-shared-responsibility', level: 'intermediate', skill: 'computers', lessonId: 'comp-files-systems', question: 'Explain the cloud shared responsibility model and how it affects SOC investigations.',
+    points: [p('IaaS, PaaS, SaaS differ in what the provider manages', 'iaas', 'paas', 'saas'), p('Provider handles physical infrastructure', 'physical', 'data center', 'provider'), p('Customer always owns accounts, access and data', 'account', 'identity', 'access', 'data'), p('Identity becomes the main attack surface', 'identity', 'sign-in', 'credential'), p('Evidence: sign-in logs and cloud activity logs', 'activity log', 'azureactivity', 'sign-in log', 'audit')],
+    model: 'In the cloud, the provider and the customer split responsibility. In IaaS the provider runs the physical data center and virtualization while the customer patches the operating systems; in PaaS the provider also manages the platform; in SaaS the provider runs the whole application. But in every model the customer remains responsible for accounts, access and data. For a SOC this means identity is the main door — cloud incidents usually start with a compromised account or wrong permissions — so investigations rely on Entra sign-in logs and cloud activity logs such as the Azure activity log.',
+    tip: 'Say clearly that "accounts, access and data are always the customer\'s" — it is the point interviewers are checking.', followUp: 'Azure activity logs show VMs created at 02:00 in an unused region. What do you investigate?' },
+)
+
 export const interviewById = new Map(INTERVIEW.map(q => [q.id, q]))
 
 export interface AnswerReview { covered: string[]; missing: string[]; score: number }

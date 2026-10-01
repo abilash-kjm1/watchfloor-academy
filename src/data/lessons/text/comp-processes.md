@@ -1,6 +1,6 @@
 ## bridge
 
-In **Start here** you learned that analysts investigate *records of what happened on computers*. The most important of those records describe **programs running**.
+In **How a computer works** you learned that the operating system loads programs from storage into memory so the CPU can run them. In **Files, file systems, servers, VMs and cloud** you learned how programs are stored as files. The most important records an analyst reads describe those **programs running**.
 
 This lesson explains what a running program is, how one program starts another, and why "which program did this, and who started it?" is the first question in almost every computer investigation.
 
@@ -129,14 +129,14 @@ The parent–child relationship (next section) adds an even more important quest
 
 ## how
 
-### Step 1: The building blocks
+### Step 1: Quick recap of the building blocks
 
-Before processes make sense, you need four hardware/OS terms:
+From **How a computer works**:
 
-- **CPU** — the chip that executes instructions.
-- **RAM (memory)** — fast, temporary storage that holds running processes.
-- **Storage (disk)** — permanent storage that holds program files and data.
-- **Operating system (OS)** — the software that manages all of the above (Windows, Linux, macOS).
+- The **CPU** executes instructions.
+- **RAM** holds running programs (processes) and their data — and is wiped at power-off.
+- **Storage** holds program files long-term.
+- The **operating system** manages all three and decides what each program may do.
 
 ### Step 2: Kernel space and user space
 
