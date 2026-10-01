@@ -5,7 +5,8 @@ import { MODULES, TRACKS } from '../data/curriculum'
 import { lessonById } from '../data'
 import { useProgress } from '../progress/store'
 import { search, type SearchItem } from './searchIndex'
-import { cx } from './ui'
+import { cx, ProgressRing } from './ui'
+import { trackTheme } from '../theme'
 
 function useTheme() {
   const [dark, setDark] = useState(() => document.documentElement.classList.contains('dark'))
@@ -20,9 +21,10 @@ export function Logo() {
   return (
     <Link to="/" className="flex items-center gap-2.5 font-semibold">
       <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden>
-        <rect width="32" height="32" rx="7" fill="var(--accent)" />
-        <path d="M16 6l8 3v6c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10V9z" fill="none" stroke="var(--surface)" strokeWidth="2.2" />
-        <path d="M12 16l3 3 5-6" fill="none" stroke="var(--surface)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+        <defs><linearGradient id="logo-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#4f46e5" /><stop offset="1" stopColor="#0891b2" /></linearGradient></defs>
+        <rect width="32" height="32" rx="9" fill="url(#logo-g)" />
+        <path d="M16 6l8 3v6c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10V9z" fill="none" stroke="#fff" strokeWidth="2.2" />
+        <path d="M12 16l3 3 5-6" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
       <span className="text-[15px] tracking-tight">Watchfloor <span className="muted font-normal">Academy</span></span>
     </Link>
@@ -53,10 +55,20 @@ function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const activeModule = MODULES.find(m => loc.pathname === `/module/${m.id}` || m.lessons.some(l => loc.pathname === `/lesson/${l}`))?.id
   const [open, setOpen] = useState<Record<string, boolean>>(() => (activeModule ? { [activeModule]: true } : {}))
   useEffect(() => { if (activeModule) setOpen(o => ({ ...o, [activeModule]: true })) }, [activeModule])
-  const item = 'flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-sm transition hover:bg-[var(--surface-2)]'
+  const item = 'flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition hover:bg-[var(--surface-2)]'
   const activeCls = 'bg-accent-soft text-accent font-medium'
+  const allLessons = MODULES.flatMap(m => m.lessons)
+  const doneAll = allLessons.filter(l => p.completed[l]).length
+  const pct = allLessons.length ? (doneAll / allLessons.length) * 100 : 0
   return (
     <nav className="space-y-6 text-sm" aria-label="Main">
+      <Link to="/dashboard" onClick={onNavigate} className="card card-hover flex items-center gap-3 p-3">
+        <ProgressRing value={pct} size={44} stroke={5} label="Overall course progress" />
+        <div className="min-w-0">
+          <div className="text-[13px] font-semibold">Your progress</div>
+          <div className="text-xs muted">{doneAll} of {allLessons.length} lessons complete</div>
+        </div>
+      </Link>
       <div className="space-y-0.5">
         {TOOLS.map(t => (
           <NavLink key={t.to} to={t.to} end onClick={onNavigate} className={({ isActive }) => cx(item, isActive && activeCls)}>
@@ -66,40 +78,54 @@ function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
       </div>
       <div>
         <div className="mb-2 px-2.5 text-[11px] font-semibold uppercase tracking-wider muted">Curriculum</div>
-        {TRACKS.map(track => (
-          <div key={track.id} className="mb-3">
-            <div className="px-2.5 py-1 text-xs font-semibold">{track.title}</div>
-            {track.modules.map(mid => {
-              const m = MODULES.find(x => x.id === mid)
-              if (!m) return null
-              const done = m.lessons.filter(l => p.completed[l]).length
-              const isOpen = open[m.id]
-              return (
-                <div key={m.id}>
-                  <div className="flex items-center">
-                    <button className="rounded p-1 muted hover:bg-[var(--surface-2)]" onClick={() => setOpen(o => ({ ...o, [m.id]: !o[m.id] }))} aria-label={`${isOpen ? 'Collapse' : 'Expand'} ${m.title}`} aria-expanded={!!isOpen} disabled={!m.lessons.length}>
-                      <ChevronRight size={14} className={cx('transition', isOpen && 'rotate-90', !m.lessons.length && 'opacity-0')} />
-                    </button>
-                    <NavLink to={`/module/${m.id}`} onClick={onNavigate} className={({ isActive }) => cx('flex flex-1 items-center justify-between gap-2 rounded-md px-1.5 py-1 hover:bg-[var(--surface-2)]', isActive && activeCls)}>
-                      <span className={cx(m.status === 'outline' && 'muted')}>{m.title}</span>
-                      {m.lessons.length > 0 && <span className="font-mono text-[10px] muted">{done}/{m.lessons.length}</span>}
-                    </NavLink>
-                  </div>
-                  {isOpen && m.lessons.map(lid => {
-                    const l = lessonById.get(lid)
-                    if (!l) return null
-                    return (
-                      <NavLink key={lid} to={`/lesson/${lid}`} onClick={onNavigate} className={({ isActive }) => cx('ml-6 flex items-start gap-2 rounded-md px-2 py-1 text-[13px] hover:bg-[var(--surface-2)]', isActive && activeCls)}>
-                        {p.completed[lid] ? <CheckCircle2 size={13} className="mt-0.5 shrink-0" style={{ color: 'var(--both)' }} /> : <Circle size={13} className="mt-0.5 shrink-0 muted" />}
-                        <span className="leading-snug">{l.title}</span>
+        {TRACKS.map(track => {
+          const th = trackTheme(track.id)
+          return (
+            <div key={track.id} className="mb-3">
+              <div className="flex items-center gap-2 px-2.5 py-1.5 text-xs font-semibold" style={{ color: th.color }}>
+                <span className="grid h-5 w-5 place-items-center rounded-md" style={{ background: th.soft }} aria-hidden><th.icon size={12} /></span>
+                {track.title}
+              </div>
+              {track.modules.map(mid => {
+                const m = MODULES.find(x => x.id === mid)
+                if (!m) return null
+                const done = m.lessons.filter(l => p.completed[l]).length
+                const isOpen = open[m.id]
+                const complete = m.lessons.length > 0 && done === m.lessons.length
+                return (
+                  <div key={m.id}>
+                    <div className="flex items-center">
+                      <button className="rounded p-1 muted hover:bg-[var(--surface-2)]" onClick={() => setOpen(o => ({ ...o, [m.id]: !o[m.id] }))} aria-label={`${isOpen ? 'Collapse' : 'Expand'} ${m.title}`} aria-expanded={!!isOpen} disabled={!m.lessons.length}>
+                        <ChevronRight size={14} className={cx('transition', isOpen && 'rotate-90', !m.lessons.length && 'opacity-0')} />
+                      </button>
+                      <NavLink to={`/module/${m.id}`} onClick={onNavigate} className={({ isActive }) => cx('flex flex-1 items-center justify-between gap-2 rounded-lg px-1.5 py-1 hover:bg-[var(--surface-2)]', isActive && activeCls)}>
+                        <span className={cx(m.status === 'outline' && 'muted')}>{m.title}</span>
+                        {m.lessons.length > 0 && (complete
+                          ? <CheckCircle2 size={14} style={{ color: 'var(--ok)' }} aria-label="Module complete" />
+                          : <span className="font-mono text-[10px] muted" aria-label={`${done} of ${m.lessons.length} lessons done`}>{done}/{m.lessons.length}</span>)}
+                        {m.status === 'outline' && <span className="rounded-full border border-base px-1.5 text-[9px] uppercase tracking-wide muted">Soon</span>}
                       </NavLink>
-                    )
-                  })}
-                </div>
-              )
-            })}
-          </div>
-        ))}
+                    </div>
+                    {isOpen && (
+                      <div className="ml-[18px] border-l pl-2" style={{ borderColor: `color-mix(in srgb, ${th.color} 35%, transparent)` }}>
+                        {m.lessons.map(lid => {
+                          const l = lessonById.get(lid)
+                          if (!l) return null
+                          return (
+                            <NavLink key={lid} to={`/lesson/${lid}`} onClick={onNavigate} className={({ isActive }) => cx('flex items-start gap-2 rounded-lg px-2 py-1 text-[13px] hover:bg-[var(--surface-2)]', isActive && activeCls)}>
+                              {p.completed[lid] ? <CheckCircle2 size={13} className="mt-0.5 shrink-0" style={{ color: 'var(--ok)' }} aria-label="Completed" /> : <Circle size={13} className="mt-0.5 shrink-0 muted" aria-label="Not started" />}
+                              <span className="leading-snug">{l.title}</span>
+                            </NavLink>
+                          )
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          )
+        })}
       </div>
       <div className="space-y-0.5">
         <div className="mb-2 px-2.5 text-[11px] font-semibold uppercase tracking-wider muted">My learning</div>
@@ -178,8 +204,13 @@ export function Layout({ children }: { children: ReactNode }) {
   }, [])
   useEffect(() => {
     if (loc.hash) {
-      const t = setTimeout(() => document.getElementById(loc.hash.slice(1))?.scrollIntoView({ block: 'start' }), 30)
-      return () => clearTimeout(t)
+      // Pages load lazily, so wait (briefly) for the target section to exist.
+      let tries = 0
+      const t = setInterval(() => {
+        const el = document.getElementById(loc.hash.slice(1))
+        if (el || ++tries > 60) { clearInterval(t); el?.scrollIntoView({ block: 'start' }) }
+      }, 30)
+      return () => clearInterval(t)
     }
     window.scrollTo(0, 0)
   }, [loc.pathname, loc.hash])

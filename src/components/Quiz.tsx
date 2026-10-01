@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { CheckCircle2, XCircle, Bookmark } from 'lucide-react'
+import { CheckCircle2, XCircle, Bookmark, Check, X, PartyPopper, Target } from 'lucide-react'
 import type { Question } from '../data/types'
 import { actions, useProgress } from '../progress/store'
 import { lessonForQuestion } from '../data'
@@ -30,12 +30,14 @@ export function QuestionCard({ q, index, onAnswered, showLessonLink }: { q: Ques
   const lesson = showLessonLink ? lessonForQuestion(q.id) : undefined
 
   return (
-    <div className="card p-5">
-      <div className="mb-3 flex items-start justify-between gap-3">
-        <div className="text-[15px] font-medium leading-relaxed">
-          {index !== undefined && <span className="mr-2 font-mono text-xs muted">Q{index + 1}</span>}
-          {q.prompt}
-          {multi && <span className="ml-2 text-xs font-semibold text-accent">Select {q.answer.length}</span>}
+    <div className="card p-5" style={done ? { borderColor: correct ? 'color-mix(in srgb, var(--ok) 45%, transparent)' : 'color-mix(in srgb, var(--danger) 40%, transparent)' } : undefined}>
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <div className="flex gap-3 text-[15px] font-medium leading-relaxed">
+          {index !== undefined && <span className="grid h-7 min-w-7 shrink-0 place-items-center rounded-lg px-1.5 font-mono text-xs font-bold" style={{ background: 'color-mix(in srgb, var(--lesson-color, var(--accent)) 14%, transparent)', color: 'var(--lesson-color, var(--accent))' }}>Q{index + 1}</span>}
+          <div>
+            {q.prompt}
+            {multi && <span className="ml-2 rounded-full px-2 py-0.5 text-xs font-semibold" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>Select {q.answer.length}</span>}
+          </div>
         </div>
         <button
           className={cx('shrink-0 rounded p-1 hover:bg-[var(--surface-2)]', bookmarked && 'text-accent')}
@@ -57,15 +59,21 @@ export function QuestionCard({ q, index, onAnswered, showLessonLink }: { q: Ques
               onClick={() => toggle(i)}
               disabled={done}
               className={cx(
-                'flex w-full items-start gap-3 rounded-lg border px-3 py-2.5 text-left text-sm transition',
-                !done && (isPicked ? 'border-[var(--accent)] bg-accent-soft' : 'border-base hover:bg-[var(--surface-2)]'),
-                done && isAnswer && 'border-[var(--both)] bg-[var(--both-soft)]',
+                'flex w-full items-start gap-3 rounded-xl border px-3 py-2.5 text-left text-sm transition',
+                !done && (isPicked ? 'border-[var(--accent)] bg-accent-soft' : 'border-base hover:border-[var(--border-strong)] hover:bg-[var(--surface-2)]'),
+                done && isAnswer && 'border-[var(--ok)] bg-[var(--ok-soft)]',
                 done && isPicked && !isAnswer && 'border-[var(--danger)] bg-[var(--danger-soft)]',
-                done && !isPicked && !isAnswer && 'border-base opacity-70',
+                done && !isPicked && !isAnswer && 'border-base opacity-60',
               )}
             >
-              <span className={cx('mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center border', multi ? 'rounded' : 'rounded-full', isPicked ? 'border-[var(--accent)] bg-accent' : 'border-[var(--muted)]')} />
-              <span className="leading-relaxed">{o}</span>
+              <span className={cx('grid h-6 w-6 shrink-0 place-items-center text-[11px] font-bold transition', multi ? 'rounded-md' : 'rounded-full')}
+                style={done && isAnswer ? { background: 'var(--ok)', color: 'var(--surface)' } : done && isPicked ? { background: 'var(--danger)', color: 'var(--surface)' } : isPicked ? { background: 'var(--accent)', color: 'var(--on-accent)' } : { border: '1.5px solid var(--border-strong)', color: 'var(--muted)' }}
+                aria-hidden>
+                {done && isAnswer ? <Check size={13} /> : done && isPicked ? <X size={13} /> : String.fromCharCode(65 + i)}
+              </span>
+              <span className="pt-0.5 leading-relaxed">{o}</span>
+              {done && isAnswer && <span className="sr-only">(correct answer)</span>}
+              {done && isPicked && !isAnswer && <span className="sr-only">(your answer, incorrect)</span>}
             </button>
           )
         })}
@@ -73,9 +81,9 @@ export function QuestionCard({ q, index, onAnswered, showLessonLink }: { q: Ques
       {!done ? (
         <button className="btn btn-primary mt-4" onClick={submit} disabled={!picked.length}>Check answer</button>
       ) : (
-        <div className="mt-4 space-y-2 rounded-lg surface-2 p-4 text-sm leading-relaxed" aria-live="polite">
-          <div className="flex items-center gap-2 font-semibold" style={{ color: correct ? 'var(--both)' : 'var(--danger)' }}>
-            {correct ? <CheckCircle2 size={18} /> : <XCircle size={18} />}
+        <div className="mt-4 space-y-2 rounded-xl p-4 text-sm leading-relaxed animate-rise" style={{ background: correct ? 'var(--ok-soft)' : 'var(--surface-2)' }} aria-live="polite">
+          <div className="flex items-center gap-2 font-semibold" style={{ color: correct ? 'var(--ok)' : 'var(--danger)' }}>
+            {correct ? <CheckCircle2 size={18} className="animate-pop" aria-hidden /> : <XCircle size={18} aria-hidden />}
             {correct ? 'Correct' : `Not quite — the answer is: ${q.answer.map(a => q.options[a]).join(' + ')}`}
           </div>
           {!correct && picked.filter(x => !q.answer.includes(x)).map(x => (
@@ -90,5 +98,29 @@ export function QuestionCard({ q, index, onAnswered, showLessonLink }: { q: Ques
 }
 
 export function Quiz({ questions }: { questions: Question[] }) {
-  return <div className="space-y-4">{questions.map((q, i) => <QuestionCard key={q.id} q={q} index={i} />)}</div>
+  const [results, setResults] = useState<Record<string, boolean>>({})
+  const answered = Object.keys(results).length
+  const right = Object.values(results).filter(Boolean).length
+  const finished = answered === questions.length && questions.length > 0
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-base px-4 py-3 text-sm">
+        <span className="font-medium">This session</span>
+        <div className="flex gap-1" aria-hidden>
+          {questions.map(q => <span key={q.id} className="h-2 w-6 rounded-full" style={{ background: q.id in results ? (results[q.id] ? 'var(--ok)' : 'var(--danger)') : 'var(--border-strong)' }} />)}
+        </div>
+        <span className="ml-auto muted" aria-live="polite">{answered}/{questions.length} answered · {right} correct</span>
+      </div>
+      {questions.map((q, i) => <QuestionCard key={q.id} q={q} index={i} onAnswered={ok => setResults(r => ({ ...r, [q.id]: ok }))} />)}
+      {finished && (
+        <div className="flex items-center gap-4 rounded-2xl p-5 animate-rise" style={{ background: right === questions.length ? 'var(--ok-soft)' : 'var(--accent-soft)' }} role="status">
+          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl animate-pop" style={{ background: right === questions.length ? 'var(--ok)' : 'var(--accent)', color: 'var(--surface)' }} aria-hidden>{right === questions.length ? <PartyPopper size={22} /> : <Target size={22} />}</span>
+          <div>
+            <div className="font-semibold">{right === questions.length ? 'Perfect score — you clearly understand this!' : `You scored ${right}/${questions.length}`}</div>
+            <div className="text-sm muted">{right === questions.length ? 'Lock it in by explaining it back in your own words below.' : 'Read the explanations above, then revisit the sections they point to. Wrong answers are where the learning happens.'}</div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
 }

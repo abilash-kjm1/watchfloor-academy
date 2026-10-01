@@ -10,7 +10,7 @@
     "typecheck": "tsc -b --noEmit",
     "lint:types": "tsc -p tsconfig.json --noEmit",
     "audit:install": "npm install --prefix audit",
-    "audit": "node audit/extract.mjs && node audit/kql-check.cjs && node audit/acronyms.mjs && node audit/integrity.mjs"
+    "audit": "node audit/extract.mjs && node audit/kql-check.cjs && node audit/acronyms.mjs && node audit/integrity.mjs && node audit/contrast.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.49.0",
