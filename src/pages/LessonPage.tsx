@@ -265,7 +265,8 @@ function useScrollSpy(ids: string[]) {
     let raf = 0
     const update = () => {
       raf = 0
-      const line = 150
+      // A section becomes "current" once its heading reaches the top third of the screen.
+      const line = Math.max(160, window.innerHeight * 0.3)
       let idx = 0
       for (let i = 0; i < ids.length; i++) {
         const el = document.getElementById(ids[i])

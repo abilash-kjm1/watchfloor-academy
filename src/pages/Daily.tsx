@@ -5,7 +5,8 @@ import type { Question } from '../data/types'
 import { actions, streak, today, useProgress } from '../progress/store'
 import { weakConcepts } from '../progress/skills'
 import { QuestionCard } from '../components/Quiz'
-import { Card, PageHeader } from '../components/ui'
+import { Callout, Card, PageHeader, Progress } from '../components/ui'
+import { Flame, Trophy } from 'lucide-react'
 
 function seeded(seed: string) {
   let h = 2166136261
@@ -44,19 +45,24 @@ export default function Daily() {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <PageHeader eyebrow="Module 35 · Daily challenge" title={`Today's challenge · ${day}`}>
+      <PageHeader eyebrow="Module 35 · Daily challenge" title={`Today's challenge · ${day}`} icon={Flame} color="var(--t-soc)">
         Five questions drawn from lessons you've studied, prioritizing concepts you've missed. About five minutes.
       </PageHeader>
       <div className="grid gap-6 lg:grid-cols-[1fr_18rem]">
         <div className="space-y-4">
-          {done && <Card className="p-4 text-sm">Completed today: <span className="font-semibold">{done.correct}/{done.total}</span> in {Math.round(done.seconds / 60)} min. You can still review the questions below.</Card>}
+          {done && (
+            <div className="flex items-center gap-4 rounded-2xl p-4 animate-rise" style={{ background: 'var(--ok-soft)' }} role="status">
+              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl" style={{ background: 'var(--ok)', color: 'var(--surface)' }} aria-hidden><Trophy size={20} /></span>
+              <div className="text-sm"><div className="font-semibold">Done for today — {done.correct}/{done.total} in {Math.max(1, Math.round(done.seconds / 60))} min</div><div className="muted">Your streak is safe. You can still review the questions below.</div></div>
+            </div>
+          )}
+          {!Object.keys(p.completed).length && <Callout tone="info" title="Warming up">You haven't completed a lesson yet, so today's questions come from the first lessons. Finish a few lessons and the challenge will draw from what you've studied.</Callout>}
           {qs.map((q, i) => <QuestionCard key={q.id} q={q} index={i} showLessonLink onAnswered={ok => onAnswered(q.id, ok)} />)}
-          {!Object.keys(p.completed).length && <p className="text-sm muted">Tip: complete a few lessons and the challenge will draw from what you've studied.</p>}
         </div>
         <div className="space-y-4">
-          <Card className="p-5">
-            <div className="text-xs font-semibold uppercase tracking-wider muted">Streak</div>
-            <div className="mt-1 text-3xl font-semibold">{streak(p.days)} days</div>
+          <Card className="relative overflow-hidden p-5" style={{ background: 'linear-gradient(160deg, color-mix(in srgb, var(--t-soc) 14%, var(--surface)), var(--surface))' }}>
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--t-soc)' }}><Flame size={14} aria-hidden /> Streak</div>
+            <div className="mt-1 text-4xl font-semibold tabular-nums">{streak(p.days)} <span className="text-base font-normal muted">day{streak(p.days) === 1 ? '' : 's'}</span></div>
             <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
               <div><div className="muted text-xs">Challenges</div><div className="font-semibold">{Object.keys(p.dailyDone).length}</div></div>
               <div><div className="muted text-xs">Accuracy</div><div className="font-semibold">{totals.t ? Math.round((totals.c / totals.t) * 100) : 0}%</div></div>
@@ -66,7 +72,7 @@ export default function Daily() {
           </Card>
           <Card className="p-5">
             <div className="mb-2 text-sm font-semibold">Recent days</div>
-            {history.length ? <ul className="space-y-1 text-sm">{history.map(([d, r]) => <li key={d} className="flex justify-between"><span>{d}</span><span className="muted">{r.correct}/{r.total}</span></li>)}</ul> : <p className="text-sm muted">No history yet.</p>}
+            {history.length ? <ul className="space-y-2 text-sm">{history.map(([d, r]) => <li key={d} className="flex items-center gap-2"><span className="w-24 shrink-0">{d}</span><Progress className="!h-1.5" value={(r.correct / r.total) * 100} color={r.correct / r.total >= 0.8 ? 'var(--ok)' : 'var(--t-soc)'} label={`${d} score`} /><span className="w-8 shrink-0 text-right muted">{r.correct}/{r.total}</span></li>)}</ul> : <p className="text-sm muted">Your scores will appear here after your first challenge.</p>}
           </Card>
           <Link to="/dashboard" className="btn w-full justify-center">Back to dashboard</Link>
         </div>

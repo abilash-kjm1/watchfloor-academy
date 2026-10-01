@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { CheckCircle2, Clock, XCircle } from 'lucide-react'
+import { BookOpen, CheckCircle2, Clock, Layers, ListChecks, RotateCcw, Target, Timer, XCircle, type LucideIcon } from 'lucide-react'
 import { ALL_QUESTIONS, lessonForQuestion } from '../data'
 import { DOMAINS, OBJECTIVES, objectiveById } from '../data/sc200'
 import type { Question } from '../data/types'
 import { actions, useProgress } from '../progress/store'
-import { Card, PageHeader, Progress, cx } from '../components/ui'
+import { Card, IconBadge, PageHeader, Progress, ProgressRing, cx } from '../components/ui'
 import { whyWrong } from '../components/explainOption'
 
 type ModeId = 'practice' | 'timed' | 'domain' | 'review' | 'objective'
@@ -48,7 +48,7 @@ export default function ExamPractice() {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <PageHeader eyebrow="Module 45 · Exam simulator" title="SC-200 practice">
+      <PageHeader eyebrow="Module 45 · Exam simulator" title="SC-200 practice" icon={ListChecks} color="var(--t-cert)">
         {EXAM_QS.length} exam-style questions mapped to official objectives. Original questions written for learning — not real exam content. Every answer explains why, not just "incorrect".
       </PageHeader>
       <div className="grid gap-6 lg:grid-cols-[1fr_20rem]">
@@ -56,14 +56,15 @@ export default function ExamPractice() {
           <h2 className="mb-4 font-semibold">Choose a mode</h2>
           <div className="grid gap-3 sm:grid-cols-2">
             {([
-              ['practice', 'Untimed practice', '15 random questions, explanations after each.'],
-              ['timed', 'Timed exam', '30 questions, 90 seconds per question, results at the end.'],
-              ['domain', 'Domain-specific', 'All questions from one exam domain.'],
-              ['review', 'Review mistakes', `${reviewPool.length} questions you last answered incorrectly.`],
-              ...(preObjective ? [['objective', 'This objective', objectiveById.get(preObjective)?.text ?? '']] : []),
-            ] as [ModeId, string, string][]).map(([id, t, d]) => (
-              <button key={id} onClick={() => setMode(id)} className={cx('rounded-lg border p-4 text-left transition', mode === id ? 'border-[var(--accent)] bg-accent-soft' : 'border-base hover:bg-[var(--surface-2)]')}>
-                <div className="font-medium">{t}</div><div className="mt-1 text-sm muted">{d}</div>
+              ['practice', 'Untimed practice', '15 random questions, explanations after each.', BookOpen, 'var(--t-investigation)'],
+              ['timed', 'Timed exam', '30 questions, 90 seconds per question, results at the end.', Timer, 'var(--t-cert)'],
+              ['domain', 'Domain-specific', 'All questions from one exam domain.', Layers, 'var(--t-microsoft)'],
+              ['review', 'Review mistakes', `${reviewPool.length} questions you last answered incorrectly.`, RotateCcw, 'var(--t-security)'],
+              ...(preObjective ? [['objective', 'This objective', objectiveById.get(preObjective)?.text ?? '', Target, 'var(--t-identity)']] : []),
+            ] as [ModeId, string, string, LucideIcon, string][]).map(([id, t, d, Icon, color]) => (
+              <button key={id} onClick={() => setMode(id)} aria-pressed={mode === id} className={cx('flex gap-3 rounded-2xl border p-4 text-left transition', mode !== id && 'border-base hover:bg-[var(--surface-2)]')} style={mode === id ? { borderColor: color, background: `color-mix(in srgb, ${color} 9%, var(--surface))` } : undefined}>
+                <IconBadge icon={Icon} color={color} size="sm" />
+                <span><span className="block font-medium">{t}</span><span className="mt-1 block text-sm muted">{d}</span></span>
               </button>
             ))}
           </div>
@@ -79,10 +80,10 @@ export default function ExamPractice() {
         <div className="space-y-6">
           <Card className="p-5">
             <h2 className="mb-3 font-semibold">Weak areas</h2>
-            {byObjective.length === 0 ? <p className="text-sm muted">Answer questions to see per-objective accuracy.</p> : (
+            {byObjective.length === 0 ? <p className="text-sm muted">Answer a few questions and your weakest objectives will appear here, so you know exactly what to revise.</p> : (
               <ul className="space-y-3 text-sm">
                 {byObjective.slice(0, 6).map(({ o, c, t }) => (
-                  <li key={o.id}><Link to={`/sc200#${o.id}`} className="line-clamp-2 hover:text-accent">{o.text}</Link><div className="mt-1 flex items-center gap-2"><Progress value={(c / t) * 100} label="accuracy" /><span className="shrink-0 text-xs muted">{c}/{t}</span></div></li>
+                  <li key={o.id}><Link to={`/sc200#${o.id}`} className="line-clamp-2 hover:text-accent">{o.text}</Link><div className="mt-1 flex items-center gap-2"><Progress value={(c / t) * 100} color={c / t >= 0.7 ? 'var(--ok)' : c / t >= 0.4 ? 'var(--t-soc)' : 'var(--danger)'} label="accuracy" /><span className="shrink-0 text-xs muted">{c}/{t}</span></div></li>
                 ))}
               </ul>
             )}
@@ -128,7 +129,8 @@ function ExamSession({ qs, mode, started, limit, onExit }: { qs: Question[]; mod
     const pct = Math.round((correct / qs.length) * 100)
     return (
       <div className="mx-auto max-w-4xl">
-        <PageHeader eyebrow="Results" title={`${correct} / ${qs.length} correct (${pct}%)`} actions={<button className="btn btn-primary" onClick={onExit}>New session</button>}>
+        <PageHeader eyebrow="Results" title={`${correct} / ${qs.length} correct`} color={pct >= 80 ? 'var(--ok)' : pct >= 60 ? 'var(--t-soc)' : 'var(--danger)'}
+          actions={<div className="flex items-center gap-4"><ProgressRing value={pct} size={76} stroke={8} color={pct >= 80 ? 'var(--ok)' : pct >= 60 ? 'var(--t-soc)' : 'var(--danger)'} label="Session score" /><button className="btn btn-primary" onClick={onExit}>New session</button></div>}>
           {pct >= 80 ? 'Strong result. Review explanations for anything you guessed.' : pct >= 60 ? 'Getting there. Focus on the weak objectives below.' : 'Use the review links under each missed question to rebuild the fundamentals first.'}
         </PageHeader>
         <div className="space-y-4">
@@ -173,19 +175,22 @@ function ExamSession({ qs, mode, started, limit, onExit }: { qs: Question[]; mod
         <div className="mt-4 space-y-2">
           {q.options.map((o, k) => (
             <button key={k} onClick={() => toggle(k)} role={multi ? 'checkbox' : 'radio'} aria-checked={pick.includes(k)}
-              className={cx('flex w-full items-start gap-3 rounded-lg border px-3 py-2.5 text-left text-sm',
+              className={cx('flex w-full items-start gap-3 rounded-xl border px-3 py-2.5 text-left text-sm transition',
                 !isChecked && (pick.includes(k) ? 'border-[var(--accent)] bg-accent-soft' : 'border-base hover:bg-[var(--surface-2)]'),
-                isChecked && q.answer.includes(k) && 'border-[var(--both)] bg-[var(--both-soft)]',
+                isChecked && q.answer.includes(k) && 'border-[var(--ok)] bg-[var(--ok-soft)]',
                 isChecked && pick.includes(k) && !q.answer.includes(k) && 'border-[var(--danger)] bg-[var(--danger-soft)]',
-                isChecked && !pick.includes(k) && !q.answer.includes(k) && 'border-base opacity-70')}>
-              <span className={cx('mt-0.5 h-4 w-4 shrink-0 border', multi ? 'rounded' : 'rounded-full', pick.includes(k) ? 'border-[var(--accent)] bg-accent' : 'border-[var(--muted)]')} />
-              {o}
+                isChecked && !pick.includes(k) && !q.answer.includes(k) && 'border-base opacity-60')}>
+              <span className={cx('grid h-6 w-6 shrink-0 place-items-center text-[11px] font-bold', multi ? 'rounded-md' : 'rounded-full')} aria-hidden
+                style={isChecked && q.answer.includes(k) ? { background: 'var(--ok)', color: 'var(--surface)' } : isChecked && pick.includes(k) ? { background: 'var(--danger)', color: 'var(--surface)' } : pick.includes(k) ? { background: 'var(--accent)', color: 'var(--on-accent)' } : { border: '1.5px solid var(--border-strong)', color: 'var(--muted)' }}>
+                {String.fromCharCode(65 + k)}
+              </span>
+              <span className="pt-0.5">{o}</span>
             </button>
           ))}
         </div>
         {isChecked && (
-          <div className="mt-4 rounded-lg surface-2 p-4 text-sm leading-relaxed">
-            <div className="font-semibold" style={{ color: checked[q.id] ? 'var(--both)' : 'var(--danger)' }}>{checked[q.id] ? 'Correct' : 'Not quite'}</div>
+          <div className="mt-4 rounded-xl p-4 text-sm leading-relaxed animate-rise" style={{ background: checked[q.id] ? 'var(--ok-soft)' : 'var(--surface-2)' }} aria-live="polite">
+            <div className="font-semibold" style={{ color: checked[q.id] ? 'var(--ok)' : 'var(--danger)' }}>{checked[q.id] ? 'Correct' : 'Not quite'}</div>
             {!checked[q.id] && pick.filter(x => !q.answer.includes(x)).map(x => <p key={x} className="mt-1"><span className="font-medium">Why "{q.options[x]}" is wrong: </span>{q.whyWrong?.[x] ?? 'It doesn\'t satisfy the requirement in the question — see the explanation.'}</p>)}
             <p className="mt-1">{q.explanation}</p>
           </div>

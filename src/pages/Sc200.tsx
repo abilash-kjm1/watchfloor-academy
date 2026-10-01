@@ -1,11 +1,13 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowDown, Bookmark, ExternalLink } from 'lucide-react'
+import { ArrowDown, Bookmark, CheckCircle2, ExternalLink, GraduationCap } from 'lucide-react'
 import { DOMAINS, OBJECTIVES, SC200_SOURCE, SC200_VERSION, type Objective } from '../data/sc200'
 import { moduleById } from '../data/curriculum'
 import { ALL_QUESTIONS, lessonById } from '../data'
 import { actions, useProgress } from '../progress/store'
-import { Callout, ModeBadge, PageHeader, Progress, cx } from '../components/ui'
+import { Callout, ModeBadge, PageHeader, Pill, ProgressRing, cx } from '../components/ui'
+
+const DOMAIN_COLOR = ['var(--t-microsoft)', 'var(--t-identity)', 'var(--t-investigation)', 'var(--t-soc)']
 import type { Mode } from '../data/types'
 import { ResourceCards } from '../components/Resources'
 import { res } from '../data/resources'
@@ -17,11 +19,16 @@ function ObjectiveRow({ o }: { o: Objective }) {
   const tried = qs.filter(q => p.answers[q.id]).length
   const lessonsDone = o.lessons.filter(l => p.completed[l]).length
   const bm = p.bookmarks.some(b => b.id === `o:${o.id}`)
+  const covered = o.lessons.length > 0 && lessonsDone === o.lessons.length
   return (
-    <article id={o.id} className="card scroll-mt-20 p-5">
+    <article id={o.id} className="card scroll-mt-28 p-5" style={{ borderLeft: `4px solid ${covered ? 'var(--ok)' : o.lessons.length ? 'var(--t-cert)' : 'var(--border-strong)'}` }}>
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">
-          <ModeBadge mode={o.mode} />
+          <div className="flex flex-wrap items-center gap-2">
+            <ModeBadge mode={o.mode} />
+            {covered && <Pill color="var(--ok)"><CheckCircle2 size={11} aria-hidden /> Studied</Pill>}
+            {!o.lessons.length && <Pill>Docs only</Pill>}
+          </div>
           <h3 className="mt-2 font-medium leading-snug">{o.text}</h3>
           <div className="mt-1 text-xs muted">{o.product}</div>
         </div>
@@ -58,7 +65,7 @@ export default function Sc200() {
   }
   return (
     <div className="mx-auto max-w-5xl">
-      <PageHeader eyebrow="Module 44 · Certification" title="SC-200 objective map" actions={<Link to="/sc200/practice" className="btn btn-primary">Practice exam</Link>}>
+      <PageHeader eyebrow="Module 44 · Certification" title="SC-200 objective map" icon={GraduationCap} color="var(--t-cert)" actions={<Link to="/sc200/practice" className="btn btn-primary">Practice exam</Link>}>
         Every objective from Microsoft's official study guide (<span className="font-medium">{SC200_VERSION}</span>), mapped to prerequisites, lessons, a lab idea, practice questions and an interview angle. Pass mark: 700 (scaled).
       </PageHeader>
       <div className="mb-8 space-y-4">
@@ -68,23 +75,28 @@ export default function Sc200() {
         <div className="flex flex-wrap items-center gap-2 text-sm">
           <span className="muted">Filter:</span>
           {(['all', 'both', 'exam', 'soc'] as const).map(m => (
-            <button key={m} onClick={() => setMode(m)} className={cx('rounded-full border px-3 py-1', mode === m ? 'border-[var(--accent)] bg-accent-soft text-accent' : 'border-base')}>{m === 'all' ? 'All objectives' : m === 'both' ? 'Exam + real SOC' : m === 'exam' ? 'Mainly exam' : 'Mainly real SOC'}</button>
+            <button key={m} onClick={() => setMode(m)} aria-pressed={mode === m} className={cx('rounded-full border px-3 py-1 transition', mode === m ? 'border-transparent bg-accent font-medium text-[var(--on-accent)]' : 'border-base hover:bg-[var(--surface-2)]')}>{m === 'all' ? 'All objectives' : m === 'both' ? 'Exam + real SOC' : m === 'exam' ? 'Mainly exam' : 'Mainly real SOC'}</button>
           ))}
         </div>
       </div>
       <div className="mb-10 grid gap-4 md:grid-cols-3">
-        {DOMAINS.map(d => (
-          <a key={d.id} href={`#domain-${d.id}`} onClick={e => { e.preventDefault(); document.getElementById(`domain-${d.id}`)?.scrollIntoView({ behavior: 'smooth' }) }} className="card block p-4 hover:border-[var(--accent)]">
-            <div className="flex items-baseline justify-between"><span className="font-mono text-sm text-accent">{d.weight}</span><ArrowDown size={14} className="muted" /></div>
-            <div className="mt-1 font-medium">{d.title}</div>
-            <div className="mt-3 text-xs muted">Objectives fully studied: {studied(d.id)}%</div>
-            <Progress className="mt-1" value={studied(d.id)} label={d.title} />
-          </a>
-        ))}
+        {DOMAINS.map((d, i) => {
+          const color = DOMAIN_COLOR[i % DOMAIN_COLOR.length]
+          return (
+            <a key={d.id} href={`#domain-${d.id}`} onClick={e => { e.preventDefault(); document.getElementById(`domain-${d.id}`)?.scrollIntoView({ behavior: 'smooth' }) }} className="card card-hover flex items-center gap-4 overflow-hidden p-4" style={{ borderTop: `4px solid ${color}` }}>
+              <ProgressRing value={studied(d.id)} size={58} stroke={6} color={color} label={`${d.title}: ${studied(d.id)}% of objectives studied`} />
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between gap-2"><span className="font-mono text-xs font-semibold" style={{ color }}>{d.weight}</span><ArrowDown size={14} className="muted" aria-hidden /></div>
+                <div className="font-medium leading-snug">{d.title}</div>
+                <div className="mt-0.5 text-xs muted">objectives studied</div>
+              </div>
+            </a>
+          )
+        })}
       </div>
-      {DOMAINS.map(d => groups[d.id] && (
+      {DOMAINS.map((d, i) => groups[d.id] && (
         <section key={d.id} id={`domain-${d.id}`} className="mb-12 scroll-mt-20">
-          <h2 className="mb-1 text-2xl font-semibold">{d.title}</h2>
+          <h2 className="mb-1 flex items-center gap-3 text-2xl font-semibold"><span className="h-8 w-1.5 rounded-full" style={{ background: DOMAIN_COLOR[i % DOMAIN_COLOR.length] }} aria-hidden />{d.title}</h2>
           <div className="mb-6 font-mono text-sm muted">{d.weight} of the exam</div>
           {Object.entries(groups[d.id]).map(([g, os]) => (
             <div key={g} className="mb-8">

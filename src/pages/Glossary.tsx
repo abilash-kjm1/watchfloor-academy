@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { Bookmark } from 'lucide-react'
+import { Bookmark, BookOpenCheck, Search } from 'lucide-react'
 import { GLOSSARY, glossaryById } from '../data/glossary'
 import { lessonById } from '../data'
 import { actions, useProgress } from '../progress/store'
 import { KqlCode } from '../components/KqlCode'
-import { PageHeader, cx } from '../components/ui'
+import { Callout, EmptyState, PageHeader, cx } from '../components/ui'
 
 const CATS: Record<string, string> = { concept: 'Concepts', role: 'Roles', network: 'Networking', windows: 'Windows', identity: 'Identity', product: 'Products', table: 'Tables', kql: 'KQL', mitre: 'MITRE ATT&CK', event: 'Event IDs', process: 'Processes' }
+const CAT_COLOR: Record<string, string> = { concept: 'var(--t-foundations)', role: 'var(--t-career)', network: 'var(--t-start)', windows: 'var(--t-microsoft)', identity: 'var(--t-identity)', product: 'var(--t-microsoft)', table: 'var(--t-investigation)', kql: 'var(--t-investigation)', mitre: 'var(--t-cert)', event: 'var(--t-soc)', process: 'var(--t-security)' }
 
 export default function Glossary() {
   const [params, setParams] = useSearchParams()
@@ -25,43 +26,59 @@ export default function Glossary() {
 
   return (
     <div className="mx-auto max-w-6xl">
-      <PageHeader eyebrow="Glossary" title="Every term, with why it matters">Each entry links to related concepts, Microsoft products, KQL and the lessons that teach it. Terms inside lessons link here too.</PageHeader>
+      <PageHeader eyebrow="Glossary" title="Every term, with why it matters" icon={BookOpenCheck} color="var(--t-foundations)">Each entry links to related concepts, Microsoft products, KQL and the lessons that teach it. Terms inside lessons link here too.</PageHeader>
       <div className="grid gap-6 lg:grid-cols-[22rem_1fr]">
         <div>
-          <input className="input mb-3" placeholder={`Filter ${GLOSSARY.length} terms…`} value={q} onChange={e => setQ(e.target.value)} aria-label="Filter glossary" />
-          <div className="mb-3 flex flex-wrap gap-1">
-            {['all', ...Object.keys(CATS)].map(c => (
-              <button key={c} onClick={() => setCat(c)} className={cx('rounded-full border px-2.5 py-0.5 text-xs', cat === c ? 'border-[var(--accent)] bg-accent-soft text-accent' : 'border-base muted')}>{c === 'all' ? 'All' : CATS[c]}</button>
-            ))}
+          <div className="relative mb-3">
+            <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 muted" aria-hidden />
+            <input className="input !pl-9" placeholder={`Filter ${GLOSSARY.length} terms…`} value={q} onChange={e => setQ(e.target.value)} aria-label="Filter glossary" />
           </div>
+          <div className="mb-3 flex flex-wrap gap-1.5" role="group" aria-label="Filter by category">
+            {['all', ...Object.keys(CATS)].map(c => {
+              const on = cat === c
+              const color = c === 'all' ? 'var(--accent)' : CAT_COLOR[c]
+              return <button key={c} onClick={() => setCat(c)} aria-pressed={on} className="rounded-full border px-2.5 py-0.5 text-xs font-medium transition" style={on ? { background: color, borderColor: color, color: 'var(--surface)' } : { borderColor: `color-mix(in srgb, ${color} 35%, var(--border))`, color }}>{c === 'all' ? 'All' : CATS[c]}</button>
+            })}
+          </div>
+          <div className="mb-2 text-xs muted" aria-live="polite">{list.length} term{list.length === 1 ? '' : 's'}</div>
           <ul className="card max-h-[65vh] divide-y overflow-y-auto scrollbar-thin" style={{ borderColor: 'var(--border)' }}>
             {list.map(t => (
               <li key={t.id} style={{ borderColor: 'var(--border)' }}>
-                <button onClick={() => setParams({ term: t.id })} className={cx('w-full px-4 py-2.5 text-left text-sm hover:bg-[var(--surface-2)]', sel === t.id && 'bg-accent-soft')}>
-                  <div className="font-medium">{t.term}</div>
-                  <div className="truncate text-xs muted">{t.definition}</div>
+                <button onClick={() => setParams({ term: t.id })} aria-current={sel === t.id ? 'true' : undefined} className={cx('flex w-full gap-3 px-4 py-2.5 text-left text-sm transition hover:bg-[var(--surface-2)]', sel === t.id && 'bg-accent-soft')}>
+                  <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full" style={{ background: CAT_COLOR[t.category] }} aria-hidden />
+                  <span className="min-w-0"><span className="block font-medium">{t.term}</span><span className="block truncate text-xs muted">{t.definition}</span></span>
                 </button>
               </li>
             ))}
-            {list.length === 0 && <li className="p-4 text-sm muted">No matching terms.</li>}
+            {list.length === 0 && (
+              <li className="p-6 text-center text-sm">
+                <div className="font-medium">No terms match “{q}”</div>
+                <p className="mt-1 muted">Check the spelling, try a shorter word, or search all categories.</p>
+                <button className="btn mt-3 !py-1 text-xs" onClick={() => { setQ(''); setCat('all') }}>Clear filters</button>
+              </li>
+            )}
           </ul>
         </div>
         <div id="term-detail" className="scroll-mt-20">
           {!g ? (
-            <div className="card p-8 text-sm muted">Select a term to see its explanation.</div>
+            <EmptyState icon={BookOpenCheck} color="var(--t-foundations)" title="Pick a term to explore">
+              Every entry explains what the term means, why it matters to a SOC analyst, a real example, and where it is taught. Try <button className="text-accent underline" onClick={() => setParams({ term: 'process' })}>Process</button> or <button className="text-accent underline" onClick={() => setParams({ term: 'kql' })}>KQL</button>.
+            </EmptyState>
           ) : (
-            <article className="card space-y-5 p-6">
+            <article className="card space-y-5 overflow-hidden p-6" style={{ borderTop: `4px solid ${CAT_COLOR[g.category]}` }}>
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <div className="text-xs font-semibold uppercase tracking-wider text-accent">{CATS[g.category]}</div>
+                  <div className="text-xs font-semibold uppercase tracking-wider" style={{ color: CAT_COLOR[g.category] }}>{CATS[g.category]}</div>
                   <h2 className="mt-1 font-serif text-3xl font-semibold">{g.term}</h2>
                   {g.aka && <div className="mt-1 text-sm muted">Also: {g.aka.join(', ')}</div>}
                 </div>
                 <button className={cx('btn !p-2', marked && 'text-accent')} onClick={() => actions.toggleBookmark({ id: `g:${g.id}`, kind: 'glossary', title: g.term, href: `/glossary?term=${g.id}` })} aria-label="Bookmark term"><Bookmark size={16} fill={marked ? 'currentColor' : 'none'} /></button>
               </div>
-              <div><div className="mb-1 text-sm font-semibold">Definition</div><p className="leading-relaxed">{g.definition}</p></div>
-              <div><div className="mb-1 text-sm font-semibold">Why it exists / why it matters</div><p className="leading-relaxed">{g.why}</p></div>
-              <div><div className="mb-1 text-sm font-semibold">Example</div><p className="leading-relaxed">{g.example}</p></div>
+              <p className="text-lg leading-relaxed">{g.definition}</p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <Callout tone="key" title="Why it matters">{g.why}</Callout>
+                <Callout tone="analogy" title="Example">{g.example}</Callout>
+              </div>
               {g.kql && <div><div className="mb-1 text-sm font-semibold">KQL</div><KqlCode code={g.kql} /></div>}
               {(g.products?.length || g.mitre?.length) ? (
                 <div className="grid gap-4 sm:grid-cols-2">

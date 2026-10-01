@@ -1,29 +1,36 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { ExternalLink, Eye } from 'lucide-react'
+import { ExternalLink, Eye, Terminal } from 'lucide-react'
 import { KQL_OPERATORS, type KqlOperator } from '../data/kqlOperators'
 import { KqlCode } from '../components/KqlCode'
-import { Callout, PageHeader } from '../components/ui'
+import { Callout, IconBadge, PageHeader, Pill } from '../components/ui'
 import { ResourceCards } from '../components/Resources'
 import { res } from '../data/resources'
 
-function Part({ n, title, children }: { n: number; title: string; children: React.ReactNode }) {
+const PART_COLOR = ['var(--t-foundations)', 'var(--t-identity)', 'var(--t-investigation)', 'var(--t-microsoft)', 'var(--t-security)', 'var(--t-soc)', 'var(--t-start)', 'var(--danger)', 'var(--t-career)']
+
+function Part({ n, title, children }: { n: number; title: string; children: ReactNode }) {
+  const color = PART_COLOR[(n - 1) % PART_COLOR.length]
   return (
     <div>
-      <div className="mb-1 text-xs font-semibold uppercase tracking-wider muted"><span className="font-mono">{n}</span> · {title}</div>
+      <div className="mb-1.5 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider" style={{ color }}>
+        <span className="grid h-5 w-5 place-items-center rounded-md font-mono text-[10px]" style={{ background: `color-mix(in srgb, ${color} 15%, transparent)` }} aria-hidden>{n}</span>{title}
+      </div>
       <div className="text-[15px] leading-relaxed">{children}</div>
     </div>
   )
 }
 
-function OperatorCard({ o }: { o: KqlOperator }) {
+const GROUP_COLOR = ['var(--t-investigation)', 'var(--t-microsoft)', 'var(--t-identity)', 'var(--t-soc)', 'var(--t-cert)', 'var(--t-career)']
+
+function OperatorCard({ o, color }: { o: KqlOperator; color: string }) {
   const [attempt, setAttempt] = useState('')
   const [reveal, setReveal] = useState(false)
   return (
-    <article id={o.id} className="card scroll-mt-20 space-y-5 p-6">
-      <header className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="font-mono text-xl font-semibold">{o.name}</h2>
-        <span className="text-xs font-semibold uppercase tracking-wider text-accent">{o.group}</span>
+    <article id={o.id} className="card scroll-mt-20 space-y-5 overflow-hidden p-6" style={{ borderTop: `4px solid ${color}` }}>
+      <header className="flex flex-wrap items-center justify-between gap-2">
+        <h2 className="flex items-center gap-3 font-mono text-xl font-semibold"><IconBadge icon={Terminal} color={color} size="sm" />{o.name}</h2>
+        <Pill color={color}>{o.group}</Pill>
       </header>
       <Part n={1} title="Plain English">{o.plain}</Part>
       <Part n={2} title="Why it exists">{o.why}</Part>
@@ -38,7 +45,7 @@ function OperatorCard({ o }: { o: KqlOperator }) {
       <Part n={9} title="Practice question">
         <p className="font-medium">{o.practice.question}</p>
         <textarea className="input mt-2 min-h-16 font-mono text-sm" placeholder="Write your query or answer first…" value={attempt} onChange={e => setAttempt(e.target.value)} aria-label={`Practice answer for ${o.name}`} />
-        {reveal ? <div className="mt-2 rounded-lg surface-2 p-3 font-mono text-sm">{o.practice.answer}</div> : <button className="btn mt-2" onClick={() => setReveal(true)}><Eye size={15} /> Show answer</button>}
+        {reveal ? <div className="mt-2 rounded-xl p-3 font-mono text-sm animate-rise" style={{ background: 'var(--ok-soft)' }}>{o.practice.answer}</div> : <button className="btn mt-2" onClick={() => setReveal(true)}><Eye size={15} aria-hidden /> {attempt.trim() ? 'Compare with the answer' : 'Show answer (try first)'}</button>}
       </Part>
       <a href={o.docs} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-sm text-accent">Official documentation <ExternalLink size={12} /></a>
     </article>
@@ -49,7 +56,7 @@ export default function KqlReference() {
   const groups = [...new Set(KQL_OPERATORS.map(o => o.group))]
   return (
     <div className="mx-auto max-w-6xl">
-      <PageHeader eyebrow="Module 16 · KQL" title="KQL operator reference">
+      <PageHeader eyebrow="Module 16 · KQL" title="KQL operator reference" icon={Terminal} color="var(--t-investigation)">
         Every operator in nine parts. Start with <Link to="/lesson/kql-what-why" className="text-accent">KQL from zero</Link> if you have never written a query.
       </PageHeader>
       <div className="mb-8">
@@ -60,16 +67,19 @@ export default function KqlReference() {
       <div className="grid gap-8 lg:grid-cols-[13rem_1fr]">
         <nav className="hidden lg:block" aria-label="Operators">
           <div className="sticky top-20 space-y-4 text-sm">
-            {groups.map(g => (
+            {groups.map((g, gi) => (
               <div key={g}>
-                <div className="mb-1 text-[11px] font-semibold uppercase tracking-wider muted">{g}</div>
-                {KQL_OPERATORS.filter(o => o.group === g).map(o => <a key={o.id} href={`#${o.id}`} onClick={e => { e.preventDefault(); document.getElementById(o.id)?.scrollIntoView({ behavior: 'smooth' }) }} className="block rounded px-2 py-0.5 font-mono text-[13px] hover:text-accent">{o.name}</a>)}
+                <div className="mb-1 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider" style={{ color: GROUP_COLOR[gi % GROUP_COLOR.length] }}><span className="h-2 w-2 rounded-full" style={{ background: GROUP_COLOR[gi % GROUP_COLOR.length] }} aria-hidden />{g}</div>
+                {KQL_OPERATORS.filter(o => o.group === g).map(o => <a key={o.id} href={`#${o.id}`} onClick={e => { e.preventDefault(); document.getElementById(o.id)?.scrollIntoView({ behavior: 'smooth' }) }} className="block rounded-lg px-2 py-0.5 font-mono text-[13px] hover:bg-[var(--surface-2)] hover:text-accent">{o.name}</a>)}
               </div>
             ))}
           </div>
         </nav>
         <div className="space-y-6">
-          {KQL_OPERATORS.map(o => <OperatorCard key={o.id} o={o} />)}
+          <div className="flex flex-wrap gap-2 lg:hidden" aria-label="Jump to operator">
+            {KQL_OPERATORS.map(o => <a key={o.id} href={`#${o.id}`} onClick={e => { e.preventDefault(); document.getElementById(o.id)?.scrollIntoView({ behavior: 'smooth' }) }} className="rounded-full border border-base px-2.5 py-0.5 font-mono text-xs" style={{ color: GROUP_COLOR[groups.indexOf(o.group) % GROUP_COLOR.length] }}>{o.name}</a>)}
+          </div>
+          {KQL_OPERATORS.map(o => <OperatorCard key={o.id} o={o} color={GROUP_COLOR[groups.indexOf(o.group) % GROUP_COLOR.length]} />)}
           <section>
             <h2 className="mb-4 text-lg font-semibold">Keep learning</h2>
             <ResourceCards resources={res('kqlCommon', 'sc200Kql', 'kqlDocs', 'mustLearnKql', 'adx')} />
