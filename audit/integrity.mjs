@@ -17,6 +17,8 @@ for (const l of d.LESSONS) {
   if (Object.keys(l.sections).length < 15) bad.push(`${l.id}: only ${Object.keys(l.sections).length} sections`)
   if (!l.bridge) bad.push(`${l.id}: no bridge`)
   if (!l.explainBack?.length) bad.push(`${l.id}: no explain-back`)
+  if (!l.story) bad.push(`${l.id}: no investigation story`)
+  else if (!l.story.moment.options.some(o => o.best)) bad.push(`${l.id}: story moment has no best option`)
   for (const id of l.connect) if (!gl.has(id)) bad.push(`${l.id}: connect → ${id}`)
   for (const t of [l.bridge ?? '', ...Object.values(l.sections), ...(l.deepDives ?? []).map(x => x.body)])
     for (const m of t.matchAll(/\[\[([^\]|]+)/g)) if (!gl.has(m[1])) bad.push(`${l.id}: [[${m[1]}]]`)
