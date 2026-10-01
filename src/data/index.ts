@@ -6,11 +6,13 @@ import { foundationLessons } from './lessons/foundations'
 import { analysisLessons } from './lessons/analysis'
 import { microsoftLessons } from './lessons/microsoft'
 import { identityEmailEndpointLessons } from './lessons/identity-email-endpoint'
+import { securityFoundationLessons } from './lessons/security-foundations'
+import { operationsLessons } from './lessons/operations'
 import { MODULES, LEARNING_PATH } from './curriculum'
 import { EXAM_QUESTIONS } from './sc200'
 import { LESSON_TEXT } from './lessons/text'
 
-export const LESSONS: Lesson[] = [...orientationLessons, ...computerLessons, ...socLessons, ...foundationLessons, ...analysisLessons, ...microsoftLessons, ...identityEmailEndpointLessons]
+export const LESSONS: Lesson[] = [...orientationLessons, ...computerLessons, ...socLessons, ...foundationLessons, ...analysisLessons, ...microsoftLessons, ...identityEmailEndpointLessons, ...securityFoundationLessons, ...operationsLessons]
   .map(l => { const t = LESSON_TEXT[l.id]; return { ...l, sections: t?.sections ?? {}, bridge: t?.bridge, explainBack: t?.explainBack } })
 export const lessonById = new Map(LESSONS.map(l => [l.id, l]))
 

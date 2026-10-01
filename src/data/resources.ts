@@ -74,6 +74,12 @@ export const R = {
   cisa: { kind: 'optional', title: 'CISA cyber threats and advisories', url: 'https://www.cisa.gov/topics/cyber-threats-and-response', source: 'CISA' },
   messerSec: { kind: 'video', title: 'Professor Messer — Security+ SY0-701 free course', url: 'https://www.professormesser.com/security-plus/sy0-701/sy0-701-video/sy0-701-comptia-security-plus-course/', source: 'Professor Messer' },
   messerNet: { kind: 'video', title: 'Professor Messer — Network+ N10-009 free course', url: 'https://www.professormesser.com/network-plus/n10-009/n10-009-video/n10-009-training-course/', source: 'Professor Messer' },
+  syslogAma: { kind: 'primary', title: 'Ingest Syslog and CEF messages to Microsoft Sentinel with the Azure Monitor Agent', url: 'https://learn.microsoft.com/en-us/azure/sentinel/connect-cef-syslog-ama', source: 'Microsoft Learn', volatile: true },
+  mdeLinux: { kind: 'docs', title: 'Microsoft Defender for Endpoint on Linux', url: 'https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-endpoint-linux', source: 'Microsoft Learn', volatile: true },
+  kerberos: { kind: 'docs', title: 'Kerberos authentication overview', url: 'https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-authentication-overview', source: 'Microsoft Learn' },
+  adBestPractices: { kind: 'primary', title: 'Best practices for securing Active Directory', url: 'https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/best-practices-for-securing-active-directory', source: 'Microsoft Learn' },
+  mdiAlerts: { kind: 'primary', title: 'Security alerts in Microsoft Defender for Identity', url: 'https://learn.microsoft.com/en-us/defender-for-identity/alerts-overview', source: 'Microsoft Learn', volatile: true },
+  tiIndicatorsTable: { kind: 'docs', title: 'ThreatIntelIndicators table reference', url: 'https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/threatintelindicators', source: 'Microsoft Learn' },
   techCommunity: { kind: 'optional', title: 'Microsoft Sentinel blog (Tech Community)', url: 'https://techcommunity.microsoft.com/category/microsoft-sentinel/blog/microsoftsentinelblog', source: 'Microsoft Tech Community', volatile: true },
 } satisfies Record<string, Resource>
 

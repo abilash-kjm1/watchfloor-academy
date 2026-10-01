@@ -33,7 +33,7 @@ export const TRACKS: { id: string; title: string; modules: string[] }[] = [
 
 /** Recommended learning order (brief §1). */
 export const LEARNING_PATH = [
-  'orientation', 'computers', 'networking', 'windows', 'linux', 'active-directory', 'entra-id', 'cyber-fundamentals', 'phishing',
+  'orientation', 'computers', 'networking', 'windows', 'linux', 'active-directory', 'entra-id', 'identity-security', 'cyber-fundamentals', 'malware', 'phishing',
   'soc', 'threat-intel', 'mitre', 'logging', 'siem', 'kql', 'sentinel', 'defender-xdr', 'mde', 'mdo', 'mdi',
   'advanced-hunting', 'incident-response', 'detection-engineering', 'soar', 'threat-hunting', 'sc200',
   'interview', 'ticket-writing', 'projects',
@@ -100,16 +100,16 @@ export const MODULES: Module[] = [
     lessons: ['win-event-logs'],
   },
   {
-    id: 'linux', number: 5, title: 'Linux Security', track: 'foundations', mode: 'soc', status: 'outline',
+    id: 'linux', number: 5, title: 'Linux Security', track: 'foundations', mode: 'soc', status: 'ready',
     blurb: 'Users, permissions, services, systemd and syslog for analysts who triage Linux hosts.',
     objectives: ['Linux architecture, users, groups, permissions', 'Processes, services and systemd', 'syslog and journalctl as evidence sources', 'Why ls, grep, ps, ss, journalctl and friends matter to an analyst', 'Syslog via AMA into Microsoft Sentinel'],
-    prereqs: ['computers'], skills: ['linux'], lessons: [], coveredIn: ['comp-users-permissions', 'log-anatomy'],
+    prereqs: ['computers'], skills: ['linux'], lessons: ['linux-security-basics'],
   },
   {
-    id: 'active-directory', number: 6, title: 'Active Directory Security', track: 'identity', mode: 'both', status: 'outline',
+    id: 'active-directory', number: 6, title: 'Active Directory Security', track: 'identity', mode: 'both', status: 'ready',
     blurb: 'Domains, domain controllers, Kerberos and NTLM, and the identity evidence they produce.',
     objectives: ['Domains, DCs, OUs, GPOs', 'Kerberos and NTLM at a conceptual level', 'Privileged groups and why changes to them matter', 'Identity evidence in Defender for Identity'],
-    prereqs: ['windows', 'networking'], skills: ['identity'], lessons: [], coveredIn: ['comp-users-permissions', 'win-event-logs'],
+    prereqs: ['windows', 'networking'], skills: ['identity'], lessons: ['ad-domains-kerberos'],
   },
   {
     id: 'entra-id', number: 7, title: 'Microsoft Entra ID', track: 'identity', mode: 'both', status: 'ready',
@@ -118,16 +118,16 @@ export const MODULES: Module[] = [
     prereqs: ['active-directory'], skills: ['identity'], lessons: ['entra-signins-audit', 'entra-ca-risk'],
   },
   {
-    id: 'cyber-fundamentals', number: 8, title: 'Cybersecurity Fundamentals', track: 'security', mode: 'soc', status: 'outline',
+    id: 'cyber-fundamentals', number: 8, title: 'Cybersecurity Fundamentals', track: 'security', mode: 'soc', status: 'ready',
     blurb: 'CIA triad, threat/vulnerability/risk, control types, defense in depth and Zero Trust.',
     objectives: ['CIA triad', 'Threat vs vulnerability vs risk', 'Preventive, detective, corrective controls', 'Defense in depth, Zero Trust, least privilege'],
-    prereqs: [], skills: ['soc'], lessons: [], coveredIn: ['soc-what-is-a-soc', 'comp-users-permissions'],
+    prereqs: [], skills: ['soc'], lessons: ['cyber-cia-risk-controls'],
   },
   {
-    id: 'malware', number: 9, title: 'Malware Fundamentals', track: 'security', mode: 'soc', status: 'outline',
+    id: 'malware', number: 9, title: 'Malware Fundamentals', track: 'security', mode: 'soc', status: 'ready',
     blurb: 'Malware categories and, most importantly, the defensive evidence that execution leaves behind.',
     objectives: ['Common malware categories', 'Static vs behavioral indicators', 'How execution shows up as process, file and network evidence', 'Detection approaches'],
-    prereqs: ['computers', 'networking'], skills: ['defender'], lessons: [], coveredIn: ['soc-ioc-ioa-ttp', 'comp-processes'],
+    prereqs: ['computers', 'networking'], skills: ['defender'], lessons: ['malware-evidence'],
   },
   {
     id: 'phishing', number: 10, title: 'Phishing & Email Security', track: 'security', mode: 'both', status: 'ready',
@@ -136,10 +136,10 @@ export const MODULES: Module[] = [
     prereqs: ['networking'], skills: ['defender'], lessons: ['phish-email-auth'],
   },
   {
-    id: 'identity-security', number: 11, title: 'Identity & Authentication Security', track: 'identity', mode: 'both', status: 'outline',
+    id: 'identity-security', number: 11, title: 'Identity & Authentication Security', track: 'identity', mode: 'both', status: 'ready',
     blurb: 'Defensive view of password attacks, MFA, token and session risk, and authentication logs.',
     objectives: ['How failed-authentication patterns differ', 'MFA and its limits', 'Session/token risk concepts', 'Investigating authentication logs'],
-    prereqs: ['entra-id'], skills: ['identity'], lessons: [], coveredIn: ['soc-triage-verdicts', 'win-event-logs'],
+    prereqs: ['entra-id'], skills: ['identity'], lessons: ['idsec-auth-attacks'],
   },
   {
     id: 'mitre', number: 12, title: 'MITRE ATT&CK', track: 'soc', mode: 'both', status: 'ready',
@@ -154,10 +154,10 @@ export const MODULES: Module[] = [
     lessons: ['mitre-framework'],
   },
   {
-    id: 'threat-intel', number: 13, title: 'IOC, IOA & Threat Intelligence', track: 'soc', mode: 'both', status: 'outline',
+    id: 'threat-intel', number: 13, title: 'IOC, IOA & Threat Intelligence', track: 'soc', mode: 'both', status: 'ready',
     blurb: 'Intelligence types, enrichment, STIX/TAXII and ingesting indicators into Sentinel.',
     objectives: ['Strategic, operational, tactical, technical intelligence', 'Enrichment and reputation', 'STIX and TAXII', 'Ingesting threat indicators into Microsoft Sentinel'],
-    prereqs: ['soc'], skills: ['threatintel'], lessons: [], coveredIn: ['soc-ioc-ioa-ttp'],
+    prereqs: ['soc'], skills: ['threatintel'], lessons: ['ti-intel-lifecycle'],
   },
   {
     id: 'logging', number: 14, title: 'Logging & Telemetry', track: 'soc', mode: 'both', status: 'ready',
@@ -207,10 +207,10 @@ export const MODULES: Module[] = [
     prereqs: ['defender-xdr'], skills: ['defender'], lessons: ['mdo-phish-investigation'],
   },
   {
-    id: 'mdi', number: 22, title: 'Defender for Identity', track: 'microsoft', mode: 'both', status: 'outline',
+    id: 'mdi', number: 22, title: 'Defender for Identity', track: 'microsoft', mode: 'both', status: 'ready',
     blurb: 'Domain controller sensors and the identity alerts they generate.',
     objectives: ['How MDI collects identity signals', 'Identity alerts and their evidence', 'IdentityLogonEvents / IdentityQueryEvents'],
-    prereqs: ['active-directory', 'defender-xdr'], skills: ['identity', 'defender'], lessons: [], coveredIn: ['ah-choose-table'],
+    prereqs: ['active-directory', 'defender-xdr'], skills: ['identity', 'defender'], lessons: ['mdi-identity-alerts'],
   },
   {
     id: 'advanced-hunting', number: 23, title: 'Advanced Hunting', track: 'investigation', mode: 'both', status: 'ready',
@@ -227,22 +227,22 @@ export const MODULES: Module[] = [
     lessons: ['ir-lifecycle'],
   },
   {
-    id: 'detection-engineering', number: 25, title: 'Detection Engineering', track: 'investigation', mode: 'both', status: 'outline',
+    id: 'detection-engineering', number: 25, title: 'Detection Engineering', track: 'investigation', mode: 'both', status: 'ready',
     blurb: 'Hypothesis → query → test → tune → deploy. Sentinel analytics rules and Defender custom detections.',
     objectives: ['Detection lifecycle', 'Tuning and false-positive handling', 'MITRE mapping of detections', 'Custom detection rules in Defender XDR'],
-    prereqs: ['kql', 'sentinel'], skills: ['sentinel', 'mitre'], lessons: [], coveredIn: ['sentinel-analytics-rules', 'mitre-framework'],
+    prereqs: ['kql', 'sentinel'], skills: ['sentinel', 'mitre'], lessons: ['de-detection-lifecycle'],
   },
   {
-    id: 'soar', number: 26, title: 'SOAR & Automation', track: 'investigation', mode: 'both', status: 'outline',
+    id: 'soar', number: 26, title: 'SOAR & Automation', track: 'investigation', mode: 'both', status: 'ready',
     blurb: 'Automation rules, playbooks and Logic Apps — and when not to automate.',
     objectives: ['Automation rules vs playbooks', 'Logic Apps connectors and actions', 'Safe automated remediation', 'When automation should stay human-approved'],
-    prereqs: ['sentinel'], skills: ['sentinel'], lessons: [], coveredIn: ['sentinel-analytics-rules'],
+    prereqs: ['sentinel'], skills: ['sentinel'], lessons: ['soar-automation'],
   },
   {
-    id: 'threat-hunting', number: 27, title: 'Threat Hunting', track: 'investigation', mode: 'both', status: 'outline',
+    id: 'threat-hunting', number: 27, title: 'Threat Hunting', track: 'investigation', mode: 'both', status: 'ready',
     blurb: 'Hypothesis-driven hunting with Sentinel hunting queries, data lake KQL jobs and notebooks.',
     objectives: ['What hunting is and why it exists', 'Forming testable hypotheses', 'Hunting queries and bookmarks in Sentinel', 'Sentinel data lake KQL jobs and summary rules'],
-    prereqs: ['advanced-hunting'], skills: ['hunting'], lessons: [], coveredIn: ['ah-choose-table', 'mitre-framework'],
+    prereqs: ['advanced-hunting'], skills: ['hunting'], lessons: ['hunt-hypothesis'],
   },
   {
     id: 'sc200', number: 44, title: 'SC-200 Certification Academy', track: 'cert', mode: 'exam', status: 'ready',
@@ -263,10 +263,10 @@ export const MODULES: Module[] = [
     prereqs: ['soc'], skills: ['soc', 'ir'], lessons: [],
   },
   {
-    id: 'projects', number: 42, title: 'Portfolio Project Builder', track: 'career', mode: 'soc', status: 'outline',
+    id: 'projects', number: 42, title: 'Portfolio Project Builder', track: 'career', mode: 'soc', status: 'ready',
     blurb: 'GitHub-ready project templates you build in your own free lab environment.',
     objectives: ['Plan a project in your own lab', 'Document objective, architecture, query and findings', 'Turn completed work into honest resume bullets'],
-    prereqs: ['kql', 'sentinel'], skills: ['kql', 'sentinel'], lessons: [],
+    prereqs: ['kql', 'sentinel'], skills: ['kql', 'sentinel'], lessons: ['proj-portfolio-lab'],
   },
 ]
 
