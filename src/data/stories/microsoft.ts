@@ -215,10 +215,10 @@ export const microsoftStories: Record<string, Story> = {
     timeline: {
       title: 'Attack story',
       entries: [
-        { time: '10:01', label: 'MDO: phishing click', detail: 'User lena.', tone: 'suspicious' },
+        { time: '10:01', label: 'Defender for Office 365 (MDO): phishing click', detail: 'User lena.', tone: 'suspicious' },
         { time: '10:03', label: 'Entra ID: anomalous token', detail: 'Same user.', tone: 'malicious' },
-        { time: '10:10', label: 'MDE: suspicious process', detail: "Lena's laptop.", tone: 'malicious' },
-        { time: '10:15', label: 'MDCA: mass download', detail: 'SharePoint.', tone: 'malicious' },
+        { time: '10:10', label: 'Defender for Endpoint (MDE): suspicious process', detail: "Lena's laptop.", tone: 'malicious' },
+        { time: '10:15', label: 'Defender for Cloud Apps (MDCA): mass download', detail: 'SharePoint.', tone: 'malicious' },
         { time: '10:16', label: 'Attack disruption: user contained', detail: 'Automatic.', tone: 'normal' },
       ],
       question: 'What would you investigate next?',

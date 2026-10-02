@@ -9,7 +9,7 @@ export const foundationStories: Record<string, Story> = {
       "You open the alert. It says a user named Priya signed in from a country she has never signed in from before.",
       "Your first instinct is to panic: “She's been hacked — lock everything!”",
       "A senior analyst leans over and asks one quiet question: “What else do we know?”",
-      "You look again. The sign-in passed multifactor authentication, came from a hotel network, and Priya's calendar shows a conference abroad this week.",
+      "You look again. The sign-in passed multifactor authentication (MFA — a second proof of identity, like a phone approval), came from a hotel network, and Priya's calendar shows a conference abroad this week.",
       "Ten minutes later, a message from Priya confirms she's travelling. The alert was real — but the activity was normal.",
     ],
     twists: [
@@ -25,7 +25,7 @@ export const foundationStories: Record<string, Story> = {
       created: "A sign-in record: user, time, IP address, location, app, device, MFA result, risk level.",
       stored: "In Microsoft Entra ID sign-in logs — and in Microsoft Sentinel if the logs are connected.",
       tamper: "An ordinary user or attacker cannot edit cloud sign-in logs.",
-      forwarded: "Usually streamed to the SIEM for long-term searching and correlation.",
+      forwarded: "Usually streamed to the SIEM (security information and event management system — the SOC's central log platform) for long-term searching and correlation.",
       still: "Yes — the sign-in and everything the account did afterwards can be investigated.",
     },
     scenarios: {
@@ -481,7 +481,7 @@ export const foundationStories: Record<string, Story> = {
       created: 'Firewall/proxy logs (IP, port, bytes), endpoint network events (with process), DNS lookups if a name was used.',
       stored: 'Firewall appliances (often sent to the SIEM via CEF), EDR telemetry.',
       tamper: 'Firewall logs are outside the endpoint — the attacker on the PC cannot alter them.',
-      forwarded: 'CEF via AMA to CommonSecurityLog; Defender for Endpoint to DeviceNetworkEvents.',
+      forwarded: 'Firewall logs in Common Event Format (CEF) via the Azure Monitor Agent (AMA) to CommonSecurityLog; Defender for Endpoint to DeviceNetworkEvents.',
       still: 'Yes — network evidence lives on systems the attacker does not control.',
     },
     scenarios: {
@@ -576,7 +576,7 @@ export const foundationStories: Record<string, Story> = {
       still: 'Yes — the lookups and the following connection are recorded centrally.',
     },
     scenarios: {
-      normal: 'Many devices resolve long random subdomains of a well-known CDN successfully.',
+      normal: 'Many devices resolve long random subdomains of a well-known content delivery network (CDN) successfully.',
       suspicious: 'One device makes hundreds of failed lookups for random names overnight.',
       malicious: 'One of those names resolves, the device connects to it, and the domain was registered yesterday.',
     },

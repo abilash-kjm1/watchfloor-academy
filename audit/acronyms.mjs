@@ -17,7 +17,9 @@ const used = a => new RegExp(`\\b${esc(a)}\\b`)
 const firstUse = new Map(); const firstDef = new Map()
 const order = data.ORDERED_LESSONS.map(l => l.id)
 for (const l of data.ORDERED_LESSONS) {
-  const text = [l.bridge ?? '', ...Object.values(l.sections)].join('\n')
+  // The story comes last in each lesson, so its text is checked after the sections.
+  const story = l.story ? JSON.stringify(l.story).replace(/"query":"(?:[^"\\]|\\.)*"/g, '').replace(/"code":"(?:[^"\\]|\\.)*"/g, '') : ''
+  const text = [l.bridge ?? '', ...Object.values(l.sections), story].join('\n')
   for (const a of CORE) {
     if (!firstUse.has(a) && used(a).test(text)) firstUse.set(a, l.id)
     if (!firstDef.has(a) && defined(a).test(text)) firstDef.set(a, l.id)
