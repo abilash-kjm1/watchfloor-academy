@@ -20,6 +20,7 @@ const ExamPractice = lazy(() => import('./pages/ExamPractice'))
 const Interview = lazy(() => import('./pages/Interview'))
 const Daily = lazy(() => import('./pages/Daily'))
 const Tickets = lazy(() => import('./pages/Tickets'))
+const Flashcards = lazy(() => import('./pages/Flashcards'))
 const Notes = lazy(() => import('./pages/Mine').then(m => ({ default: m.Notes })))
 const Bookmarks = lazy(() => import('./pages/Mine').then(m => ({ default: m.Bookmarks })))
 const StudyPlan = lazy(() => import('./pages/Mine').then(m => ({ default: m.StudyPlan })))
@@ -43,6 +44,7 @@ function AppRoutes() {
           <Route path="/interview" element={<Interview />} />
           <Route path="/daily" element={<Daily />} />
           <Route path="/tickets" element={<Tickets />} />
+          <Route path="/flashcards" element={<Flashcards />} />
           <Route path="/notes" element={<Notes />} />
           <Route path="/bookmarks" element={<Bookmarks />} />
           <Route path="/plan" element={<StudyPlan />} />

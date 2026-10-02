@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { BookOpen, CheckCircle2, Clock, Layers, ListChecks, RotateCcw, Target, Timer, XCircle, type LucideIcon } from 'lucide-react'
+import { BookOpen, CheckCircle2, Clock, GraduationCap, Layers, ListChecks, RotateCcw, Target, Timer, XCircle, type LucideIcon } from 'lucide-react'
 import { ALL_QUESTIONS, lessonForQuestion } from '../data'
 import { DOMAINS, OBJECTIVES, objectiveById } from '../data/sc200'
 import type { Question } from '../data/types'
@@ -8,7 +8,9 @@ import { actions, useProgress } from '../progress/store'
 import { Card, IconBadge, PageHeader, Progress, ProgressRing, cx } from '../components/ui'
 import { whyWrong } from '../components/explainOption'
 
-type ModeId = 'practice' | 'timed' | 'domain' | 'review' | 'objective'
+type ModeId = 'practice' | 'timed' | 'mock' | 'domain' | 'review' | 'objective'
+/** Mock exam: 50 questions split like the exam's domain weights (≈42% / 38% / 20%). */
+const MOCK_SPLIT: Record<string, number> = { env: 21, ir: 19, hunt: 10 }
 const EXAM_QS = ALL_QUESTIONS.filter(q => q.objectives?.length)
 
 function shuffle<T>(a: T[]): T[] { const x = [...a]; for (let i = x.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [x[i], x[j]] = [x[j], x[i]] } return x }
@@ -18,7 +20,7 @@ export default function ExamPractice() {
   const [params] = useSearchParams()
   const p = useProgress()
   const preObjective = params.get('objective')
-  const [mode, setMode] = useState<ModeId>(preObjective ? 'objective' : 'practice')
+  const [mode, setMode] = useState<ModeId>(preObjective ? 'objective' : params.get('mode') === 'mock' ? 'mock' : 'practice')
   const [domain, setDomain] = useState('env')
   const [session, setSession] = useState<{ qs: Question[]; mode: ModeId; started: number; limit?: number } | null>(null)
 
@@ -27,11 +29,12 @@ export default function ExamPractice() {
     let qs: Question[] = []
     if (mode === 'practice') qs = shuffle(EXAM_QS).slice(0, 15)
     if (mode === 'timed') qs = shuffle(EXAM_QS).slice(0, 30)
+    if (mode === 'mock') qs = shuffle(Object.entries(MOCK_SPLIT).flatMap(([d, n]) => shuffle(EXAM_QS.filter(q => domainOf(q) === d)).slice(0, n)))
     if (mode === 'domain') qs = shuffle(EXAM_QS.filter(q => domainOf(q) === domain))
     if (mode === 'review') qs = shuffle(reviewPool)
     if (mode === 'objective') qs = EXAM_QS.filter(q => q.objectives!.includes(preObjective ?? ''))
     if (!qs.length) return
-    setSession({ qs, mode, started: Date.now(), limit: mode === 'timed' ? qs.length * 90 : undefined })
+    setSession({ qs, mode, started: Date.now(), limit: mode === 'timed' ? qs.length * 90 : mode === 'mock' ? 100 * 60 : undefined })
   }
 
   // weak-area tracking per objective
@@ -57,6 +60,7 @@ export default function ExamPractice() {
           <div className="grid gap-3 sm:grid-cols-2">
             {([
               ['practice', 'Untimed practice', '15 random questions, explanations after each.', BookOpen, 'var(--t-investigation)'],
+              ['mock', 'Full mock exam', '50 questions weighted like the real domains, 100 minutes, results by domain at the end.', GraduationCap, 'var(--t-identity)'],
               ['timed', 'Timed exam', '30 questions, 90 seconds per question, results at the end.', Timer, 'var(--t-cert)'],
               ['domain', 'Domain-specific', 'All questions from one exam domain.', Layers, 'var(--t-microsoft)'],
               ['review', 'Review mistakes', `${reviewPool.length} questions you last answered incorrectly.`, RotateCcw, 'var(--t-security)'],
@@ -107,7 +111,7 @@ function ExamSession({ qs, mode, started, limit, onExit }: { qs: Question[]; mod
   const [checked, setChecked] = useState<Record<string, boolean>>({})
   const [finished, setFinished] = useState(false)
   const [now, setNow] = useState(Date.now())
-  const timed = mode === 'timed'
+  const timed = mode === 'timed' || mode === 'mock'
   useEffect(() => { if (!timed || finished) return; const t = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(t) }, [timed, finished])
   const remaining = limit ? Math.max(0, limit - Math.floor((now - started) / 1000)) : null
   const isRight = (q: Question) => { const pk = picks[q.id] ?? []; return pk.length === q.answer.length && pk.every(x => q.answer.includes(x)) }
@@ -133,6 +137,21 @@ function ExamSession({ qs, mode, started, limit, onExit }: { qs: Question[]; mod
           actions={<div className="flex items-center gap-4"><ProgressRing value={pct} size={76} stroke={8} color={pct >= 80 ? 'var(--ok)' : pct >= 60 ? 'var(--t-soc)' : 'var(--danger)'} label="Session score" /><button className="btn btn-primary" onClick={onExit}>New session</button></div>}>
           {pct >= 80 ? 'Strong result. Review explanations for anything you guessed.' : pct >= 60 ? 'Getting there. Focus on the weak objectives below.' : 'Use the review links under each missed question to rebuild the fundamentals first.'}
         </PageHeader>
+        <div className="mb-6 grid gap-3 md:grid-cols-3">
+          {DOMAINS.map(d => {
+            const inDomain = qs.filter(q => domainOf(q) === d.id)
+            if (!inDomain.length) return null
+            const right = inDomain.filter(isRight).length
+            const dp = Math.round((right / inDomain.length) * 100)
+            return (
+              <Card key={d.id} className="p-4">
+                <div className="text-sm font-medium leading-snug">{d.title}</div>
+                <div className="mt-1 text-2xl font-semibold tabular-nums">{right}/{inDomain.length} <span className="text-sm font-normal muted">({dp}%)</span></div>
+                <Progress className="mt-2" value={dp} color={dp >= 80 ? 'var(--ok)' : dp >= 60 ? 'var(--t-soc)' : 'var(--danger)'} label={`${d.title} score`} />
+              </Card>
+            )
+          })}
+        </div>
         <div className="space-y-4">
           {qs.map((q, k) => {
             const ok = isRight(q); const lesson = lessonForQuestion(q.id)

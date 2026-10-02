@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
-import { Search, Moon, Sun, Menu, X, ChevronRight, CheckCircle2, Circle, LayoutDashboard, BookOpenCheck, Terminal, GraduationCap, MessagesSquare, CalendarCheck, FileText, StickyNote, Bookmark, CalendarRange, Settings, Library, ListChecks } from 'lucide-react'
+import { Search, Moon, Sun, Menu, X, ChevronRight, CheckCircle2, Circle, LayoutDashboard, BookOpenCheck, Terminal, GraduationCap, MessagesSquare, CalendarCheck, FileText, StickyNote, Bookmark, CalendarRange, Settings, Library, ListChecks, Layers } from 'lucide-react'
 import { MODULES, TRACKS } from '../data/curriculum'
 import { lessonById } from '../data'
 import { useProgress } from '../progress/store'
@@ -39,6 +39,7 @@ const TOOLS = [
   { to: '/sc200/practice', label: 'Exam practice', icon: ListChecks },
   { to: '/interview', label: 'Interview mode', icon: MessagesSquare },
   { to: '/daily', label: 'Daily challenge', icon: CalendarCheck },
+  { to: '/flashcards', label: 'Flashcards', icon: Layers },
   { to: '/tickets', label: 'Ticket writing', icon: FileText },
   { to: '/glossary', label: 'Glossary', icon: BookOpenCheck },
 ]

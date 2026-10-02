@@ -5,7 +5,8 @@ import { DOMAINS, OBJECTIVES, SC200_SOURCE, SC200_VERSION, type Objective } from
 import { moduleById } from '../data/curriculum'
 import { ALL_QUESTIONS, lessonById } from '../data'
 import { actions, useProgress } from '../progress/store'
-import { Callout, ModeBadge, PageHeader, Pill, ProgressRing, cx } from '../components/ui'
+import { Callout, ModeBadge, PageHeader, Pill, Progress, ProgressRing, cx } from '../components/ui'
+import { examReadiness, objectiveReadiness, READINESS_COLOR } from '../progress/readiness'
 
 const DOMAIN_COLOR = ['var(--t-microsoft)', 'var(--t-identity)', 'var(--t-investigation)', 'var(--t-soc)']
 import type { Mode } from '../data/types'
@@ -20,6 +21,7 @@ function ObjectiveRow({ o }: { o: Objective }) {
   const lessonsDone = o.lessons.filter(l => p.completed[l]).length
   const bm = p.bookmarks.some(b => b.id === `o:${o.id}`)
   const covered = o.lessons.length > 0 && lessonsDone === o.lessons.length
+  const r = objectiveReadiness(p, o)
   return (
     <article id={o.id} className="card scroll-mt-28 p-5" style={{ borderLeft: `4px solid ${covered ? 'var(--ok)' : o.lessons.length ? 'var(--t-cert)' : 'var(--border-strong)'}` }}>
       <div className="flex items-start justify-between gap-3">
@@ -28,6 +30,7 @@ function ObjectiveRow({ o }: { o: Objective }) {
             <ModeBadge mode={o.mode} />
             {covered && <Pill color="var(--ok)"><CheckCircle2 size={11} aria-hidden /> Studied</Pill>}
             {!o.lessons.length && <Pill>Docs only</Pill>}
+            <Pill color={READINESS_COLOR[r.level]}>Readiness {r.score}% · {r.level}</Pill>
           </div>
           <h3 className="mt-2 font-medium leading-snug">{o.text}</h3>
           <div className="mt-1 text-xs muted">{o.product}</div>
@@ -45,6 +48,47 @@ function ObjectiveRow({ o }: { o: Objective }) {
         <li className="md:col-span-2"><div className="text-[11px] font-semibold uppercase tracking-wider muted">Real SOC relevance</div><div className="mt-1 muted">{o.realSoc}</div></li>
       </ol>
     </article>
+  )
+}
+
+/** Exam readiness: weighted by domain, driven by lessons studied and question accuracy. */
+function ReadinessPanel() {
+  const p = useProgress()
+  const r = useMemo(() => examReadiness(p), [p])
+  const color = r.overall >= 80 ? 'var(--ok)' : r.overall >= 60 ? 'var(--t-soc)' : 'var(--t-cert)'
+  return (
+    <section className="card mb-8 overflow-hidden" aria-labelledby="readiness-h">
+      <div className="grid gap-6 p-6 md:grid-cols-[auto_1fr_1fr]">
+        <div className="flex flex-col items-center justify-center gap-2 text-center">
+          <ProgressRing value={r.overall} size={110} stroke={10} color={color} label="Overall exam readiness" />
+          <div id="readiness-h" className="font-semibold">Exam readiness</div>
+          <div className="max-w-[12rem] text-xs muted">Weighted by exam domain. Aim for 80%+ before booking.</div>
+        </div>
+        <div className="space-y-3">
+          <div className="text-xs font-semibold uppercase tracking-wider muted">By domain</div>
+          {r.domains.map((d, i) => (
+            <div key={d.domain.id}>
+              <div className="mb-1 flex justify-between gap-2 text-sm"><span className="truncate">{d.domain.title}</span><span className="shrink-0 font-mono text-xs muted">{d.score}% · {d.domain.weight}</span></div>
+              <Progress value={d.score} color={DOMAIN_COLOR[i % DOMAIN_COLOR.length]} label={`${d.domain.title} readiness`} />
+            </div>
+          ))}
+          <Link to="/sc200/practice?mode=mock" className="btn btn-primary mt-2">Take a full mock exam</Link>
+        </div>
+        <div>
+          <div className="mb-2 text-xs font-semibold uppercase tracking-wider muted">Focus next</div>
+          {r.weakest.length === 0 ? <p className="text-sm" style={{ color: 'var(--ok)' }}>Every objective is at “Ready”. Keep practising with mock exams.</p> : (
+            <ul className="space-y-2 text-sm">
+              {r.weakest.map(w => (
+                <li key={w.objective.id} className="flex items-start gap-2">
+                  <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full" style={{ background: READINESS_COLOR[w.level] }} aria-hidden />
+                  <span className="min-w-0"><a href={`#${w.objective.id}`} onClick={e => { e.preventDefault(); document.getElementById(w.objective.id)?.scrollIntoView({ behavior: 'smooth' }) }} className="line-clamp-2 hover:text-accent">{w.objective.text}</a><span className="text-xs muted">{w.score}% · {w.answered}/{w.total} questions · <Link className="text-accent" to={`/sc200/practice?objective=${w.objective.id}`}>practise</Link></span></span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+    </section>
   )
 }
 
@@ -79,6 +123,7 @@ export default function Sc200() {
           ))}
         </div>
       </div>
+      <ReadinessPanel />
       <div className="mb-10 grid gap-4 md:grid-cols-3">
         {DOMAINS.map((d, i) => {
           const color = DOMAIN_COLOR[i % DOMAIN_COLOR.length]

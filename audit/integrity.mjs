@@ -33,6 +33,8 @@ for (const g of GLOSSARY) {
 for (const m of MODULES) for (const l of [...m.lessons, ...(m.coveredIn ?? [])]) if (!ls.has(l)) bad.push(`module ${m.id}: lesson ${l}`)
 for (const o of OBJECTIVES) for (const l of o.lessons) if (!ls.has(l)) bad.push(`objective ${o.id}: lesson ${l}`)
 for (const q of d.ALL_QUESTIONS) if (q.answer.some(a => a >= q.options.length)) bad.push(`question ${q.id}: answer index`)
+for (const o of OBJECTIVES) { const n = d.ALL_QUESTIONS.filter(q => q.objectives?.includes(o.id)).length; if (n < 3) bad.push(`objective ${o.id}: only ${n} practice questions`) }
+for (const q of d.ALL_QUESTIONS) for (const o of q.objectives ?? []) if (!obj.has(o)) bad.push(`question ${q.id}: objective ${o}`)
 const ids = d.ALL_QUESTIONS.map(q => q.id); for (const id of ids.filter((x, i) => ids.indexOf(x) !== i)) bad.push(`duplicate question ${id}`)
 const iids = INTERVIEW.map(q => q.id); for (const id of iids.filter((x, i) => iids.indexOf(x) !== i)) bad.push(`duplicate interview ${id}`)
 console.log(bad.length ? bad.join('\n') : `Integrity OK: ${d.LESSONS.length} lessons, ${d.ALL_QUESTIONS.length} questions, ${GLOSSARY.length} glossary terms, ${INTERVIEW.length} interview questions.`)

@@ -12,6 +12,7 @@ import { platformExtraLessons } from './lessons/platform-extras'
 import { storyLessons } from './lessons/story-lessons'
 import { MODULES, LEARNING_PATH } from './curriculum'
 import { EXAM_QUESTIONS } from './sc200'
+import { EXAM_BANK } from './examBank'
 import { LESSON_TEXT } from './lessons/text'
 import { STORIES } from './stories'
 
@@ -22,7 +23,7 @@ export const lessonById = new Map(LESSONS.map(l => [l.id, l]))
 /** Lessons in recommended learning order. */
 export const ORDERED_LESSONS: Lesson[] = LEARNING_PATH.flatMap(mid => (MODULES.find(m => m.id === mid)?.lessons ?? []).map(id => lessonById.get(id)!).filter(Boolean))
 
-export const ALL_QUESTIONS: Question[] = [...LESSONS.flatMap(l => l.quiz), ...EXAM_QUESTIONS]
+export const ALL_QUESTIONS: Question[] = [...LESSONS.flatMap(l => l.quiz), ...EXAM_QUESTIONS, ...EXAM_BANK]
 export const questionById = new Map(ALL_QUESTIONS.map(q => [q.id, q]))
 
 /** Which lesson teaches a question's concept (for the review engine). */

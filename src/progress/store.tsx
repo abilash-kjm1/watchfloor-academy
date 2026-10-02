@@ -19,10 +19,15 @@ export interface ProgressState {
   studyHours: 1 | 2 | 3
   timeSpent: Record<string, number>
   dailyDone: Record<string, { correct: number; total: number; seconds: number }>
+  /** Flashcards (Leitner boxes 1–5): when each card is next due. */
+  cards: Record<string, { box: number; due: number }>
 }
 
+/** Days until the next review for each Leitner box after a correct answer. */
+export const BOX_DAYS = [0, 1, 3, 7, 16, 35]
+
 const KEY = 'soc-academy:progress:v1'
-const EMPTY: ProgressState = { version: 1, completed: {}, answers: {}, labs: {}, interview: {}, exams: [], notes: [], bookmarks: [], activity: [], days: [], xp: 0, studyHours: 1, timeSpent: {}, dailyDone: {} }
+const EMPTY: ProgressState = { version: 1, completed: {}, answers: {}, labs: {}, interview: {}, exams: [], notes: [], bookmarks: [], activity: [], days: [], xp: 0, studyHours: 1, timeSpent: {}, dailyDone: {}, cards: {} }
 
 function load(): ProgressState {
   try {
@@ -81,6 +86,15 @@ export const actions = {
     if (seconds <= 0) return
     state = { ...state, timeSpent: { ...state.timeSpent, [lessonId]: (state.timeSpent[lessonId] ?? 0) + seconds } }
     persist() // no emit: avoid re-rendering for timing updates
+  },
+  /** Spaced repetition: "knew it" moves a card up a box (longer gap); "not yet" sends it back to box 1. */
+  reviewCard(id: string, knew: boolean) {
+    update(s => {
+      const prev = s.cards[id]?.box ?? 0
+      const box = knew ? Math.min(5, prev + 1) : 1
+      const due = Date.now() + (knew ? BOX_DAYS[box] : 0) * 86400000
+      return { ...s, xp: s.xp + (knew ? 2 : 0), cards: { ...s.cards, [id]: { box, due } } }
+    })
   },
   setStudyHours(h: 1 | 2 | 3) { update(s => ({ ...s, studyHours: h })) },
   saveNote(n: Partial<Note> & { title: string; body: string }) {
