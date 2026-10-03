@@ -18,7 +18,7 @@ export const SKILLS: Skill[] = [
   { id: 'threatintel', name: 'Threat Intelligence', blurb: 'IOCs, IOAs, TTPs, enrichment.' },
 ]
 
-/** Sidebar grouping (brief §54). Module ids in display order. */
+/** Sidebar grouping (brief Â§54). Module ids in display order. */
 export const TRACKS: { id: string; title: string; modules: string[] }[] = [
   { id: 'start', title: 'Start here', modules: ['orientation'] },
   { id: 'foundations', title: 'Foundations', modules: ['computers', 'networking', 'windows', 'linux'] },
@@ -31,7 +31,7 @@ export const TRACKS: { id: string; title: string; modules: string[] }[] = [
   { id: 'career', title: 'Career', modules: ['interview', 'ticket-writing', 'projects'] },
 ]
 
-/** Recommended learning order (brief §1). */
+/** Recommended learning order (brief Â§1). */
 export const LEARNING_PATH = [
   'orientation', 'computers', 'networking', 'windows', 'linux', 'active-directory', 'entra-id', 'identity-security', 'cyber-fundamentals', 'malware', 'phishing',
   'soc', 'threat-intel', 'mitre', 'logging', 'siem', 'kql', 'sentinel', 'defender-xdr', 'mde', 'mdo', 'mdi', 'cloud-security', 'm365-investigation',
@@ -62,7 +62,7 @@ export const MODULES: Module[] = [
   },
   {
     id: 'computers', number: 2, title: 'Computer Fundamentals', track: 'foundations', mode: 'soc', status: 'ready',
-    blurb: 'Hardware, operating system, files, servers, VMs, cloud, processes and permissions — the building blocks every piece of evidence describes.',
+    blurb: 'Hardware, operating system, files, servers, VMs, cloud, processes and permissions â€” the building blocks every piece of evidence describes.',
     objectives: [
       'Explain CPU, memory (RAM), storage and the operating system, and why each matters to security',
       'Explain kernel mode vs user mode and why privilege levels protect the system',
@@ -85,7 +85,7 @@ export const MODULES: Module[] = [
       'Recognize normal vs unusual network patterns at a high level',
     ],
     prereqs: ['computers'], skills: ['networking'],
-    lessons: ['net-tcpip-ports', 'net-dns'],
+    lessons: ['net-tcpip-ports', 'net-dns', 'net-http-tls', 'net-firewall-proxy'],
   },
   {
     id: 'windows', number: 4, title: 'Windows Fundamentals & Security', track: 'foundations', mode: 'both', status: 'ready',
@@ -97,7 +97,7 @@ export const MODULES: Module[] = [
       'Know which Microsoft tables carry Windows evidence',
     ],
     prereqs: ['computers'], skills: ['windows'],
-    lessons: ['win-event-logs', 'win-log-clearing'],
+    lessons: ['win-event-logs', 'win-log-clearing', 'win-persistence', 'ps-logging'],
   },
   {
     id: 'linux', number: 5, title: 'Linux Security', track: 'foundations', mode: 'soc', status: 'ready',
@@ -109,12 +109,12 @@ export const MODULES: Module[] = [
     id: 'active-directory', number: 6, title: 'Active Directory Security', track: 'identity', mode: 'both', status: 'ready',
     blurb: 'Domains, domain controllers, Kerberos and NTLM, and the identity evidence they produce.',
     objectives: ['Domains, DCs, OUs, GPOs', 'Kerberos and NTLM at a conceptual level', 'Privileged groups and why changes to them matter', 'Identity evidence in Defender for Identity'],
-    prereqs: ['windows', 'networking'], skills: ['identity'], lessons: ['ad-domains-kerberos'],
+    prereqs: ['windows', 'networking'], skills: ['identity'], lessons: ['ad-domains-kerberos', 'ad-kerberos-attacks'],
   },
   {
     id: 'entra-id', number: 7, title: 'Microsoft Entra ID', track: 'identity', mode: 'both', status: 'ready',
     blurb: 'Cloud identity: sign-in and audit logs, MFA, Conditional Access, Identity Protection.',
-    objectives: ['Explain users, groups, roles, applications and service principals', 'Read interactive and non-interactive sign-in logs and audit logs', 'Explain MFA, Conditional Access (signals → decision → enforcement) and their licensing', 'Distinguish user risk from sign-in risk and investigate risky users', 'Remediate a compromised identity: revoke sessions, reset, remove attacker changes'],
+    objectives: ['Explain users, groups, roles, applications and service principals', 'Read interactive and non-interactive sign-in logs and audit logs', 'Explain MFA, Conditional Access (signals â†’ decision â†’ enforcement) and their licensing', 'Distinguish user risk from sign-in risk and investigate risky users', 'Remediate a compromised identity: revoke sessions, reset, remove attacker changes'],
     prereqs: ['active-directory'], skills: ['identity'], lessons: ['entra-signins-audit', 'entra-ca-risk'],
   },
   {
@@ -143,7 +143,7 @@ export const MODULES: Module[] = [
   },
   {
     id: 'mitre', number: 12, title: 'MITRE ATT&CK', track: 'soc', mode: 'both', status: 'ready',
-    blurb: 'A shared language for adversary behavior — and how SOCs use it to measure and improve detection coverage.',
+    blurb: 'A shared language for adversary behavior â€” and how SOCs use it to measure and improve detection coverage.',
     objectives: [
       'Explain why ATT&CK exists and how it differs from a checklist',
       'Distinguish tactics, techniques, sub-techniques and procedures',
@@ -214,39 +214,39 @@ export const MODULES: Module[] = [
   },
   {
     id: 'cloud-security', number: 28, title: 'Defender for Cloud & Cloud Apps', track: 'microsoft', mode: 'both', status: 'ready',
-    blurb: 'Cloud workload alerts for VMs, storage, key vaults and the management plane — plus shadow IT and risky OAuth apps.',
+    blurb: 'Cloud workload alerts for VMs, storage, key vaults and the management plane â€” plus shadow IT and risky OAuth apps.',
     objectives: ['Explain Defender for Cloud posture management vs workload protection', 'Investigate Defender for Cloud alerts and respond with cloud-native actions', 'Explain Defender for Cloud Apps capabilities and app governance', 'Investigate and remediate consent phishing and risky OAuth apps'],
     prereqs: ['computers', 'entra-id', 'defender-xdr'], skills: ['defender', 'identity'], lessons: ['mdc-workload-alerts', 'mdca-oauth-apps'],
   },
   {
     id: 'm365-investigation', number: 29, title: 'Microsoft 365 Investigation', track: 'microsoft', mode: 'both', status: 'ready',
-    blurb: 'Purview DLP, insider risk, audit and content search — and Microsoft Graph activity logs for API-level evidence.',
+    blurb: 'Purview DLP, insider risk, audit and content search â€” and Microsoft Graph activity logs for API-level evidence.',
     objectives: ['Triage DLP and insider risk alerts with identity context', 'Use Purview Audit (Standard vs Premium) and MailItemsAccessed', 'Find and remove content with eDiscovery content search', 'Scope token theft with Microsoft Graph activity logs'],
     prereqs: ['phishing', 'entra-id', 'kql'], skills: ['ir', 'identity'], lessons: ['purview-alerts', 'graph-activity-logs'],
   },
   {
     id: 'advanced-hunting', number: 23, title: 'Advanced Hunting', track: 'investigation', mode: 'both', status: 'ready',
-    blurb: 'Choosing the right Defender XDR table for a question — the skill SC-200 tests directly.',
+    blurb: 'Choosing the right Defender XDR table for a question â€” the skill SC-200 tests directly.',
     objectives: ['Explain the problem each core table solves', 'Choose the right table for a question', 'Know key columns and when not to use a table', 'Build hunting queries and custom detections'],
     prereqs: ['kql', 'defender-xdr'], skills: ['hunting', 'kql'],
     lessons: ['ah-choose-table'],
   },
   {
     id: 'incident-response', number: 24, title: 'Incident Response', track: 'investigation', mode: 'both', status: 'ready',
-    blurb: 'From alert to lessons learned — the lifecycle, decisions and documentation of a response.',
+    blurb: 'From alert to lessons learned â€” the lifecycle, decisions and documentation of a response.',
     objectives: ['Walk through triage, investigation, scoping, containment, eradication, recovery, lessons learned', 'Choose proportionate containment', 'Document decisions for handover', 'Relate IR phases to Defender and Sentinel actions'],
     prereqs: ['soc', 'defender-xdr'], skills: ['ir'],
     lessons: ['ir-lifecycle'],
   },
   {
     id: 'detection-engineering', number: 25, title: 'Detection Engineering', track: 'investigation', mode: 'both', status: 'ready',
-    blurb: 'Hypothesis → query → test → tune → deploy. Sentinel analytics rules and Defender custom detections.',
+    blurb: 'Hypothesis â†’ query â†’ test â†’ tune â†’ deploy. Sentinel analytics rules and Defender custom detections.',
     objectives: ['Detection lifecycle', 'Tuning and false-positive handling', 'MITRE mapping of detections', 'Custom detection rules in Defender XDR'],
     prereqs: ['kql', 'sentinel'], skills: ['sentinel', 'mitre'], lessons: ['de-detection-lifecycle'],
   },
   {
     id: 'soar', number: 26, title: 'SOAR & Automation', track: 'investigation', mode: 'both', status: 'ready',
-    blurb: 'Automation rules, playbooks and Logic Apps — and when not to automate.',
+    blurb: 'Automation rules, playbooks and Logic Apps â€” and when not to automate.',
     objectives: ['Automation rules vs playbooks', 'Logic Apps connectors and actions', 'Safe automated remediation', 'When automation should stay human-approved'],
     prereqs: ['sentinel'], skills: ['sentinel'], lessons: ['soar-automation'],
   },
@@ -270,7 +270,7 @@ export const MODULES: Module[] = [
   },
   {
     id: 'ticket-writing', number: 33, title: 'SOC Ticket Writing', track: 'career', mode: 'soc', status: 'ready',
-    blurb: 'How to write incident notes another analyst can act on — with weak and improved examples.',
+    blurb: 'How to write incident notes another analyst can act on â€” with weak and improved examples.',
     objectives: ['Use a consistent ticket template', 'Separate facts, assessment and recommendations', 'Write for the next shift'],
     prereqs: ['soc'], skills: ['soc', 'ir'], lessons: [],
   },

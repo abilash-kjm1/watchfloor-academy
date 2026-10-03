@@ -10,13 +10,14 @@ import { securityFoundationLessons } from './lessons/security-foundations'
 import { operationsLessons } from './lessons/operations'
 import { platformExtraLessons } from './lessons/platform-extras'
 import { storyLessons } from './lessons/story-lessons'
+import { depthLessons } from './lessons/depth-lessons'
 import { MODULES, LEARNING_PATH } from './curriculum'
 import { EXAM_QUESTIONS } from './sc200'
 import { EXAM_BANK } from './examBank'
 import { LESSON_TEXT } from './lessons/text'
 import { STORIES } from './stories'
 
-export const LESSONS: Lesson[] = [...orientationLessons, ...computerLessons, ...socLessons, ...foundationLessons, ...analysisLessons, ...microsoftLessons, ...identityEmailEndpointLessons, ...securityFoundationLessons, ...operationsLessons, ...platformExtraLessons, ...storyLessons]
+export const LESSONS: Lesson[] = [...orientationLessons, ...computerLessons, ...socLessons, ...foundationLessons, ...analysisLessons, ...microsoftLessons, ...identityEmailEndpointLessons, ...securityFoundationLessons, ...operationsLessons, ...platformExtraLessons, ...storyLessons, ...depthLessons]
   .map(l => { const t = LESSON_TEXT[l.id]; return { ...l, sections: t?.sections ?? {}, bridge: t?.bridge, explainBack: t?.explainBack, story: l.story ?? STORIES[l.id] } })
 export const lessonById = new Map(LESSONS.map(l => [l.id, l]))
 
