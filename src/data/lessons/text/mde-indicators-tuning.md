@@ -25,7 +25,7 @@ What the actions mean:
 - **Block execution** — don't let it run or connect.
 - **Block and remediate** — block it and clean it up (for example, quarantine the file).
 
-Each indicator can have an **expiry date** and can be **scoped to device groups**. There is a limit of **15,000 indicators per tenant**.
+Each indicator can have an **expiry date** and can be **scoped to device groups**. There is a limit of **15,000 indicators per [[tenant|tenant]]**.
 
 ### 2. Alert tuning (formerly alert suppression)
 **Alert tuning rules** automatically handle alerts that match conditions you define — for example "this alert, for this file, from this folder, on these devices". Actions:

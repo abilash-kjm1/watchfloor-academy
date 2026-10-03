@@ -121,7 +121,7 @@ A restaurant kitchen:
 
 ### Step 3: Why updates matter
 
-The OS and drivers are large programs, so they contain bugs. Some bugs are **vulnerabilities** an attacker could use. Updates (patches) fix them, which is why "missing updates" appears as a risk in security tools.
+The OS and drivers are large programs, so they contain bugs. Some bugs are **vulnerabilities** an attacker could use. Updates ([[patch|patches]]) fix them, which is why "missing updates" appears as a risk in security tools.
 
 ### Step 4: Where each part shows up in investigations
 
@@ -137,14 +137,14 @@ The OS and drivers are large programs, so they contain bugs. Some bugs are **vul
 A help-desk ticket: "My laptop fan is always loud and it's very slow."
 
 1. IT opens Task Manager: one unfamiliar process uses **95% CPU** around the clock.
-2. Its file sits in a user's AppData folder and isn't signed.
+2. Its file sits in a user's [[appdata|AppData]] folder and isn't [[digital-signature|signed]].
 3. The security team identifies it as a cryptocurrency miner — the attacker was using the company's **CPU** to make money.
 
 A hardware symptom was the first clue to a security problem.
 
 ## securityExample
 
-An alert: *"Suspicious access to LSASS memory"* on a workstation.
+An alert: *"Suspicious access to [[lsass|LSASS]] memory"* on a workstation.
 
 - `lsass.exe` is the Windows process that handles sign-ins, so its **memory** can contain credential material.
 - A program reading that memory is behaving like a credential-stealing tool.

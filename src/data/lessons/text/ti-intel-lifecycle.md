@@ -112,7 +112,7 @@ When an alert contains an IP, domain or hash, the analyst asks:
 | Method | Use it for |
 |---|---|
 | **Threat Intelligence – TAXII** data connector | Feeds from TAXII 2.x servers (sharing communities, vendors) |
-| **Threat Intelligence Upload API** — an application programming interface (API) | Platforms that push STIX objects to Sentinel |
+| **Threat Intelligence Upload API** — an [[api|application programming interface (API)]] | Platforms that push STIX objects to Sentinel |
 | **Microsoft Defender Threat Intelligence** connector | Microsoft's own indicators |
 | **Manual** creation | One-off indicators from your own investigations |
 

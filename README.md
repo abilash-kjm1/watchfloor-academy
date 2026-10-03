@@ -24,7 +24,7 @@ npm run build      # static site in dist/ (HashRouter — works from any static 
 | KQL reference | 15 operators/families, each in 9 parts (plain English → practice question) |
 | Interview mode | 49 questions (beginner → advanced); offline key-point coverage check, model answer, tip, follow-up |
 | Quality | Independent audit in [AUDIT_REPORT.md](AUDIT_REPORT.md): all 229 KQL queries verified with Microsoft's KQL parser against official schemas; MITRE checked against ATT&CK v19; acronym-before-definition check. Re-run with `npm run audit` (KQL parser, acronym-before-definition, cross-reference and color-contrast checks). |
-| Also | Dashboard, performance-based skill tree, personalized review, module checkpoints, daily challenge + streaks, study planner (1/2/3 h/day), ticket-writing trainer, 152-term glossary with hover definitions, global search (Ctrl K), notes, bookmarks, export/import, dark/light mode, mobile layout |
+| Also | Dashboard, performance-based skill tree, personalized review, module checkpoints, daily challenge + streaks, study planner (1/2/3 h/day), ticket-writing trainer, beginner starter kit on every module page (plain-language intro, words to know first, lessons to revisit, free beginner resources), 199-term glossary with hover definitions, global search (Ctrl K), notes, bookmarks, export/import, dark/light mode, mobile layout |
 
 **Not included (by decision):** an in-app query engine with simulated security telemetry, alert-triage/case-file simulators, and the capstone. KQL practice points learners to the free Azure Data Explorer help cluster and their own Sentinel/Defender lab tenant instead. An unwired, untested KQL interpreter is kept in `extras/kql-engine.ts` for possible future use; it is not part of the build.
 

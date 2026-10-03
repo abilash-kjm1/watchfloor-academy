@@ -103,7 +103,7 @@ The analyst doesn't need to decrypt anything: the metadata and the process tell 
 - **Non-browser processes** (rundll32, PowerShell, unknown executables) making HTTPS connections.
 - **Regular, small** connections to one rare destination (beaconing).
 - **Newly registered** domains, look-alike names, IP addresses used directly instead of names.
-- **Large uploads** to unusual destinations (possible exfiltration).
+- **Large uploads** to unusual destinations (possible [[exfiltration|exfiltration]]).
 - Direct connections that **bypass the company proxy**.
 
 ### Normal → suspicious → malicious

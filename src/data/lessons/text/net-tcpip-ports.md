@@ -45,7 +45,6 @@ A **[[port|port]]** identifies a specific **service** (program) on that device.
 - **IP addresses** exist because many devices share one network, and each needs a unique address.
 - **Ports** exist because each device runs many services at once (web, email, file sharing).
 - **TCP** exists because many applications need every byte delivered correctly and in order — web pages, email, files.
-- **UDP** exists for speed (see the line below).
 - **UDP** exists because some applications prefer **speed** over guaranteed delivery — DNS lookups, voice calls, video.
 
 ## name
@@ -110,7 +109,7 @@ Networking is easier to understand as **four layers**, each doing one job. Every
 - IPv6 addresses are much longer (128 bits) and written in hexadecimal, e.g. `2001:db8::1`.
 
 ### Subnets
-- A **subnet** is a block of addresses, written like `10.10.20.0/24`.
+- A **[[subnet|subnet]]** is a block of addresses, written like `10.10.20.0/24`.
 - Each IPv4 address is made of 32 **bits** (ones and zeros), shown as four numbers of 8 bits each.
 - `/24` means the first 24 bits (the first three numbers) identify the network — so this subnet holds `10.10.20.0` to `10.10.20.255`.
 
@@ -144,12 +143,12 @@ Then data flows. At the end:
 | 80 | HTTP — Hypertext Transfer Protocol | Websites (unencrypted) |
 | 443 | HTTPS — HTTP Secure | Websites (encrypted) |
 | 25 / 587 | SMTP — Simple Mail Transfer Protocol | Sending email |
-| 22 | SSH — Secure Shell | Remote Linux administration |
-| 3389 | RDP — Remote Desktop Protocol | Remote Windows desktop |
-| 445 | SMB — Server Message Block | Windows file sharing |
-| 389 / 636 | LDAP / LDAPS — Lightweight Directory Access Protocol | Looking up accounts in a directory such as Active Directory |
+| 22 | [[ssh|SSH]] — Secure Shell | Remote Linux administration |
+| 3389 | [[rdp|RDP]] — Remote Desktop Protocol | Remote Windows desktop |
+| 445 | [[smb|SMB]] — Server Message Block | Windows file sharing |
+| 389 / 636 | [[ldap|LDAP]] / LDAPS — Lightweight Directory Access Protocol | Looking up accounts in a directory such as Active Directory |
 | 88 | Kerberos | Windows domain sign-in (named after the three-headed guard dog of Greek myth) |
-| 67 / 68 | DHCP — Dynamic Host Configuration Protocol | Getting an IP address automatically |
+| 67 / 68 | [[dhcp|DHCP]] — Dynamic Host Configuration Protocol | Getting an IP address automatically |
 
 ## analogy
 
@@ -193,7 +192,7 @@ Why this stands out:
 - Remote admin ports (**3389, 22**) **open to the internet**, with many failed connection attempts.
 - **Workstation-to-workstation** traffic on admin protocols (SMB, RDP).
 - Very **regular outbound connections** to one rare IP at fixed intervals.
-  - This could be malware "checking in" — or a normal updater. Check which program is doing it.
+  - This could be malware "checking in" ([[beaconing|beaconing]]) — or a normal updater. Check which program is doing it.
 - **Large uploads** to an unfamiliar destination.
 - A protocol on an **unusual port** for that protocol.
 

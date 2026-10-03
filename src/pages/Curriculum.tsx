@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowRight, CheckCircle2, Clock, GraduationCap, Library, Lock, PlayCircle, Signpost, Target } from 'lucide-react'
+import { ArrowRight, CheckCircle2, Clock, GraduationCap, Library, Lock, PlayCircle, Signpost, Sprout, Target } from 'lucide-react'
+import type { ModuleStarter } from '../data/types'
+import { TermLink } from '../components/Markdown'
+import { ResourceCards } from '../components/Resources'
 import { TRACKS, moduleById } from '../data/curriculum'
 import { lessonVars, moduleIcon, trackTheme } from '../theme'
 import { lessonById, ALL_QUESTIONS } from '../data'
@@ -80,6 +83,29 @@ export function Curriculum() {
   )
 }
 
+function StarterKit({ starter, color }: { starter: ModuleStarter; color: string }) {
+  const revisit = (starter.revisit ?? []).map(id => lessonById.get(id)).filter(Boolean)
+  return (
+    <details open className="card mb-10 p-5" style={{ borderColor: `color-mix(in srgb, ${color} 35%, var(--border))` }}>
+      <summary className="flex cursor-pointer list-none items-center gap-2 font-semibold">
+        <Sprout size={18} style={{ color }} aria-hidden /> New to this? Start here
+        <span className="ml-auto text-xs font-normal muted">Beginner starter kit</span>
+      </summary>
+      <p className="mt-3 text-sm leading-relaxed">{starter.intro}</p>
+      <h3 className="mb-2 mt-4 text-sm font-semibold">Words to know first <span className="font-normal muted">— hover or tap for a quick definition</span></h3>
+      <div className="flex flex-wrap gap-x-3 gap-y-1.5 text-sm">{starter.terms.map(id => <TermLink key={id} id={id} />)}</div>
+      {revisit.length > 0 && (
+        <>
+          <h3 className="mb-2 mt-4 text-sm font-semibold">If it feels hard, revisit</h3>
+          <div className="flex flex-wrap gap-2">{revisit.map(l => <Link key={l!.id} to={`/lesson/${l!.id}`} className="btn !py-1 text-sm">{l!.title}</Link>)}</div>
+        </>
+      )}
+      <h3 className="mb-2 mt-4 text-sm font-semibold">Free beginner resources</h3>
+      <ResourceCards resources={starter.resources} />
+    </details>
+  )
+}
+
 export function ModulePage() {
   const { id = '' } = useParams()
   const m = moduleById(id)
@@ -115,6 +141,8 @@ export function ModulePage() {
         {m.blurb}
         <div className="mt-3 flex flex-wrap items-center gap-2"><ModeBadge mode={m.mode} />{lessons.length > 0 && <Pill color={th.color}><Clock size={11} aria-hidden /> {lessons.reduce((a, l) => a + l.minutes, 0)} min total</Pill>}</div>
       </PageHeader>
+
+      {m.starter && <StarterKit starter={m.starter} color={th.color} />}
 
       {lessons.length > 0 && (
         <section className="mb-10" aria-labelledby="lessons-h">

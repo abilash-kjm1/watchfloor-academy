@@ -1,4 +1,5 @@
-import type { Module, Skill } from './types'
+import type { Module, ModuleStarter, Skill } from './types'
+import { res } from './resources'
 
 export const SKILLS: Skill[] = [
   { id: 'soc', name: 'SOC Operations', blurb: 'Roles, workflow, triage, escalation, verdicts.' },
@@ -18,7 +19,7 @@ export const SKILLS: Skill[] = [
   { id: 'threatintel', name: 'Threat Intelligence', blurb: 'IOCs, IOAs, TTPs, enrichment.' },
 ]
 
-/** Sidebar grouping (brief Â§54). Module ids in display order. */
+/** Sidebar grouping (brief §54). Module ids in display order. */
 export const TRACKS: { id: string; title: string; modules: string[] }[] = [
   { id: 'start', title: 'Start here', modules: ['orientation'] },
   { id: 'foundations', title: 'Foundations', modules: ['computers', 'networking', 'windows', 'linux'] },
@@ -31,7 +32,7 @@ export const TRACKS: { id: string; title: string; modules: string[] }[] = [
   { id: 'career', title: 'Career', modules: ['interview', 'ticket-writing', 'projects'] },
 ]
 
-/** Recommended learning order (brief Â§1). */
+/** Recommended learning order (brief §1). */
 export const LEARNING_PATH = [
   'orientation', 'computers', 'networking', 'windows', 'linux', 'active-directory', 'entra-id', 'identity-security', 'cyber-fundamentals', 'malware', 'phishing',
   'soc', 'threat-intel', 'mitre', 'logging', 'siem', 'kql', 'sentinel', 'defender-xdr', 'mde', 'mdo', 'mdi', 'cloud-security', 'm365-investigation',
@@ -62,7 +63,7 @@ export const MODULES: Module[] = [
   },
   {
     id: 'computers', number: 2, title: 'Computer Fundamentals', track: 'foundations', mode: 'soc', status: 'ready',
-    blurb: 'Hardware, operating system, files, servers, VMs, cloud, processes and permissions â€” the building blocks every piece of evidence describes.',
+    blurb: 'Hardware, operating system, files, servers, VMs, cloud, processes and permissions — the building blocks every piece of evidence describes.',
     objectives: [
       'Explain CPU, memory (RAM), storage and the operating system, and why each matters to security',
       'Explain kernel mode vs user mode and why privilege levels protect the system',
@@ -114,7 +115,7 @@ export const MODULES: Module[] = [
   {
     id: 'entra-id', number: 7, title: 'Microsoft Entra ID', track: 'identity', mode: 'both', status: 'ready',
     blurb: 'Cloud identity: sign-in and audit logs, MFA, Conditional Access, Identity Protection.',
-    objectives: ['Explain users, groups, roles, applications and service principals', 'Read interactive and non-interactive sign-in logs and audit logs', 'Explain MFA, Conditional Access (signals â†’ decision â†’ enforcement) and their licensing', 'Distinguish user risk from sign-in risk and investigate risky users', 'Remediate a compromised identity: revoke sessions, reset, remove attacker changes'],
+    objectives: ['Explain users, groups, roles, applications and service principals', 'Read interactive and non-interactive sign-in logs and audit logs', 'Explain MFA, Conditional Access (signals → decision → enforcement) and their licensing', 'Distinguish user risk from sign-in risk and investigate risky users', 'Remediate a compromised identity: revoke sessions, reset, remove attacker changes'],
     prereqs: ['active-directory'], skills: ['identity'], lessons: ['entra-signins-audit', 'entra-ca-risk'],
   },
   {
@@ -143,7 +144,7 @@ export const MODULES: Module[] = [
   },
   {
     id: 'mitre', number: 12, title: 'MITRE ATT&CK', track: 'soc', mode: 'both', status: 'ready',
-    blurb: 'A shared language for adversary behavior â€” and how SOCs use it to measure and improve detection coverage.',
+    blurb: 'A shared language for adversary behavior — and how SOCs use it to measure and improve detection coverage.',
     objectives: [
       'Explain why ATT&CK exists and how it differs from a checklist',
       'Distinguish tactics, techniques, sub-techniques and procedures',
@@ -214,39 +215,39 @@ export const MODULES: Module[] = [
   },
   {
     id: 'cloud-security', number: 28, title: 'Defender for Cloud & Cloud Apps', track: 'microsoft', mode: 'both', status: 'ready',
-    blurb: 'Cloud workload alerts for VMs, storage, key vaults and the management plane â€” plus shadow IT and risky OAuth apps.',
+    blurb: 'Cloud workload alerts for VMs, storage, key vaults and the management plane — plus shadow IT and risky OAuth apps.',
     objectives: ['Explain Defender for Cloud posture management vs workload protection', 'Investigate Defender for Cloud alerts and respond with cloud-native actions', 'Explain Defender for Cloud Apps capabilities and app governance', 'Investigate and remediate consent phishing and risky OAuth apps'],
     prereqs: ['computers', 'entra-id', 'defender-xdr'], skills: ['defender', 'identity'], lessons: ['mdc-workload-alerts', 'mdca-oauth-apps'],
   },
   {
     id: 'm365-investigation', number: 29, title: 'Microsoft 365 Investigation', track: 'microsoft', mode: 'both', status: 'ready',
-    blurb: 'Purview DLP, insider risk, audit and content search â€” and Microsoft Graph activity logs for API-level evidence.',
+    blurb: 'Purview DLP, insider risk, audit and content search — and Microsoft Graph activity logs for API-level evidence.',
     objectives: ['Triage DLP and insider risk alerts with identity context', 'Use Purview Audit (Standard vs Premium) and MailItemsAccessed', 'Find and remove content with eDiscovery content search', 'Scope token theft with Microsoft Graph activity logs'],
     prereqs: ['phishing', 'entra-id', 'kql'], skills: ['ir', 'identity'], lessons: ['purview-alerts', 'graph-activity-logs'],
   },
   {
     id: 'advanced-hunting', number: 23, title: 'Advanced Hunting', track: 'investigation', mode: 'both', status: 'ready',
-    blurb: 'Choosing the right Defender XDR table for a question â€” the skill SC-200 tests directly.',
+    blurb: 'Choosing the right Defender XDR table for a question — the skill SC-200 tests directly.',
     objectives: ['Explain the problem each core table solves', 'Choose the right table for a question', 'Know key columns and when not to use a table', 'Build hunting queries and custom detections'],
     prereqs: ['kql', 'defender-xdr'], skills: ['hunting', 'kql'],
     lessons: ['ah-choose-table'],
   },
   {
     id: 'incident-response', number: 24, title: 'Incident Response', track: 'investigation', mode: 'both', status: 'ready',
-    blurb: 'From alert to lessons learned â€” the lifecycle, decisions and documentation of a response.',
+    blurb: 'From alert to lessons learned — the lifecycle, decisions and documentation of a response.',
     objectives: ['Walk through triage, investigation, scoping, containment, eradication, recovery, lessons learned', 'Choose proportionate containment', 'Document decisions for handover', 'Relate IR phases to Defender and Sentinel actions'],
     prereqs: ['soc', 'defender-xdr'], skills: ['ir'],
     lessons: ['ir-lifecycle'],
   },
   {
     id: 'detection-engineering', number: 25, title: 'Detection Engineering', track: 'investigation', mode: 'both', status: 'ready',
-    blurb: 'Hypothesis â†’ query â†’ test â†’ tune â†’ deploy. Sentinel analytics rules and Defender custom detections.',
+    blurb: 'Hypothesis → query → test → tune → deploy. Sentinel analytics rules and Defender custom detections.',
     objectives: ['Detection lifecycle', 'Tuning and false-positive handling', 'MITRE mapping of detections', 'Custom detection rules in Defender XDR'],
     prereqs: ['kql', 'sentinel'], skills: ['sentinel', 'mitre'], lessons: ['de-detection-lifecycle'],
   },
   {
     id: 'soar', number: 26, title: 'SOAR & Automation', track: 'investigation', mode: 'both', status: 'ready',
-    blurb: 'Automation rules, playbooks and Logic Apps â€” and when not to automate.',
+    blurb: 'Automation rules, playbooks and Logic Apps — and when not to automate.',
     objectives: ['Automation rules vs playbooks', 'Logic Apps connectors and actions', 'Safe automated remediation', 'When automation should stay human-approved'],
     prereqs: ['sentinel'], skills: ['sentinel'], lessons: ['soar-automation'],
   },
@@ -270,7 +271,7 @@ export const MODULES: Module[] = [
   },
   {
     id: 'ticket-writing', number: 33, title: 'SOC Ticket Writing', track: 'career', mode: 'soc', status: 'ready',
-    blurb: 'How to write incident notes another analyst can act on â€” with weak and improved examples.',
+    blurb: 'How to write incident notes another analyst can act on — with weak and improved examples.',
     objectives: ['Use a consistent ticket template', 'Separate facts, assessment and recommendations', 'Write for the next shift'],
     prereqs: ['soc'], skills: ['soc', 'ir'], lessons: [],
   },
@@ -281,5 +282,192 @@ export const MODULES: Module[] = [
     prereqs: ['kql', 'sentinel'], skills: ['kql', 'sentinel'], lessons: ['proj-portfolio-lab'],
   },
 ]
+
+/**
+ * Beginner starter kits — written after walking through every module as a newcomer.
+ * Each says what the module is about in plain words, which terms to know first,
+ * which earlier lessons to revisit, and free beginner resources.
+ */
+const STARTERS: Record<string, ModuleStarter> = {
+  orientation: {
+    intro: 'You need no security background. This module explains what a security analyst does and the handful of words every later lesson uses. If any word feels new later on, hover over it or look it up in the Glossary.',
+    terms: ['threat', 'vulnerability', 'risk', 'endpoint', 'log', 'alert', 'soc'],
+    resources: res('sec101Cyber', 'learnCyberBasics', 'nistGlossary'),
+  },
+  computers: {
+    intro: 'Every piece of security evidence describes something a computer did: a program started, a file changed, an account signed in. This module explains those building blocks in everyday language. You only need to have used a computer before.',
+    terms: ['cpu', 'ram', 'storage', 'operating-system', 'process', 'parent-process', 'digital-signature', 'registry', 'sha256'],
+    revisit: ['start-here'],
+    resources: res('processExplorer', 'learnCloudConcepts', 'learnAzureCore', 'messerYoutube'),
+  },
+  networking: {
+    intro: 'Computers talk to each other using addresses (IP), doors (ports) and shared rules (protocols). Learn these and every firewall, DNS and connection log becomes readable. Start with "TCP/IP, ports and protocols" — the later lessons build on it.',
+    terms: ['packet', 'ip-address', 'port', 'tcp', 'udp', 'dns', 'firewall', 'proxy', 'tls'],
+    revisit: ['comp-processes'],
+    resources: res('messerNet', 'cfDns', 'cfTls', 'cfFirewall'),
+  },
+  windows: {
+    intro: 'Windows writes a diary of what happens — sign-ins, programs starting, settings changing — called the event log. This module teaches you to read it. Make sure processes, accounts and the registry feel familiar first.',
+    terms: ['event', 'log', 'process', 'registry', 'logon-type', 'logon-id', 'sid', 'service', 'scheduled-task'],
+    revisit: ['comp-processes', 'comp-users-permissions'],
+    resources: res('processExplorer', 'auditPolicies', 'psOverview', 'sysmon'),
+  },
+  linux: {
+    intro: 'Most servers and cloud workloads run Linux. The ideas are the same as on Windows — users, permissions, processes, logs — with different names. You will see short commands like ls and grep; trying them yourself makes everything click.',
+    terms: ['linux', 'sudo', 'ssh', 'syslog', 'permission', 'process'],
+    revisit: ['comp-users-permissions'],
+    resources: res('ubuntuCli', 'bandit', 'syslogAma'),
+  },
+  'active-directory': {
+    intro: 'Active Directory is the central list of users and computers inside most companies, and the system that checks their passwords. Attackers aim for it because controlling it means controlling everything. Read the first lesson slowly; the second (Kerberos attacks) builds directly on it.',
+    terms: ['active-directory', 'domain-controller', 'ou', 'group-policy', 'kerberos', 'ntlm', 'ldap', 'spn'],
+    revisit: ['comp-users-permissions', 'win-event-logs'],
+    resources: res('adOverview', 'learnSecConcepts', 'kerberos'),
+  },
+  'entra-id': {
+    intro: 'Microsoft Entra ID is Active Directory\'s cloud cousin: it checks sign-ins to Microsoft 365, Teams, Azure and thousands of apps. This module teaches the two logs analysts read most — sign-ins and audit — and the controls (MFA, Conditional Access) that protect accounts.',
+    terms: ['entra-id', 'tenant', 'authentication', 'mfa', 'conditional-access', 'service-principal', 'hybrid-identity', 'session-token'],
+    revisit: ['comp-users-permissions', 'ad-domains-kerberos'],
+    resources: res('entraWhatIs', 'learnIdentityTypes', 'learnEntraCaps', 'sec101Iam'),
+  },
+  'identity-security': {
+    intro: 'This module looks at how attackers try to get into accounts — guessing passwords, tricking people, stealing sign-in sessions — and the log patterns each leaves. Read Entra ID first: everything here is seen through its sign-in logs.',
+    terms: ['brute-force', 'password-spraying', 'mfa', 'session-token', 'aitm', 'identity-protection'],
+    revisit: ['entra-signins-audit'],
+    resources: res('learnEntraCaps', 'sec101Iam', 'entraMfa'),
+  },
+  'cyber-fundamentals': {
+    intro: 'The core ideas of security in one place: what we protect (confidentiality, integrity, availability), how we think about risk, and the kinds of controls that reduce it. No technical background needed.',
+    terms: ['cia-triad', 'threat', 'vulnerability', 'risk', 'exploit', 'patch', 'defense-in-depth', 'zero-trust', 'least-privilege'],
+    resources: res('learnCyberBasics', 'learnThreats', 'sec101ZeroTrust', 'nistCsf'),
+  },
+  malware: {
+    intro: 'Malware is software written to cause harm. You will not analyze malware code here — you will learn the traces it leaves (processes, files, connections, autostart entries), which is what SOC analysts actually work with.',
+    terms: ['malware', 'ransomware', 'process', 'persistence', 'c2', 'sha256', 'sandbox', 'living-off-the-land'],
+    revisit: ['comp-processes', 'win-persistence'],
+    resources: res('sec101Malware', 'learnThreats', 'sec101Edr'),
+  },
+  phishing: {
+    intro: 'Phishing is the most common way attacks start: a fake email that tricks someone into clicking, opening or signing in. This module explains how email works, how to read headers, and what SPF, DKIM and DMARC can (and can\'t) prove.',
+    terms: ['phishing', 'spf', 'dkim', 'dmarc', 'bec', 'aitm', 'dns'],
+    revisit: ['net-dns'],
+    resources: res('sec101Phishing', 'learnThreats', 'emailAuth'),
+  },
+  soc: {
+    intro: 'A security operations center (SOC) is the team that watches for attacks and responds. This module explains how the team works, how a single event becomes an incident, and how analysts decide whether an alert is real.',
+    terms: ['soc', 'event', 'alert', 'incident', 'triage', 'true-positive', 'false-positive', 'ioc', 'ttp', 'soc-metrics'],
+    revisit: ['start-here'],
+    resources: res('sec101Soc', 'secOpsGuide', 'learnSecSolutions'),
+  },
+  mitre: {
+    intro: 'MITRE ATT&CK is a shared encyclopedia of attacker behavior. Analysts use it to name what they see ("this is credential dumping") and to check which behaviors their detections cover. You don\'t memorize it — you learn to look things up.',
+    terms: ['mitre-attack', 'tactic', 'technique', 'ttp', 'persistence', 'lateral-movement'],
+    revisit: ['soc-ioc-ioa-ttp'],
+    resources: res('attackStart', 'attack', 'navigator'),
+  },
+  'threat-intel': {
+    intro: 'Threat intelligence is knowledge about attackers — who they are, what they do and the clues they leave — turned into action. This module shows the different kinds of intelligence and how indicators get into Microsoft Sentinel.',
+    terms: ['threat-intel', 'ioc', 'ioa', 'ttp', 'pyramid-of-pain', 'stix-taxii', 'api'],
+    revisit: ['soc-ioc-ioa-ttp'],
+    resources: res('cisaBasics', 'cisa', 'stix'),
+  },
+  logging: {
+    intro: 'Every investigation is built from logs. This module teaches you to read any log line the same way — when, who, where, what, result — and warns about the traps (time zones, nested JSON fields).',
+    terms: ['log', 'event', 'telemetry', 'utc', 'json', 'entity'],
+    revisit: ['win-event-logs', 'net-tcpip-ports'],
+    resources: res('sec101Siem', 'auditPolicies', 'nistGlossary'),
+  },
+  siem: {
+    intro: 'A SIEM gathers logs from everywhere into one searchable place and runs detection rules on them. This module explains the pipeline from a log on one device to an incident in front of an analyst.',
+    terms: ['siem', 'log', 'data-connector', 'normalization', 'analytics-rule', 'incident'],
+    revisit: ['log-anatomy'],
+    resources: res('sec101Siem', 'learnSentinelIntro', 'sentinelOverview'),
+  },
+  kql: {
+    intro: 'KQL is how you ask questions of security data: start with a table, then filter, shape and count it step by step. It looks like code but reads like a recipe. Practice is everything — run the free sample queries as you go.',
+    terms: ['kql', 'json', 'utc', 'log-analytics', 'advanced-hunting'],
+    revisit: ['log-anatomy', 'siem-pipeline'],
+    resources: res('learnFirstKql', 'learnKqlResults', 'kustoDetective', 'kc7', 'adx'),
+  },
+  sentinel: {
+    intro: 'Microsoft Sentinel is Microsoft\'s cloud SIEM. Everything from the SIEM and KQL modules applies here, with Microsoft names: workspace, data connectors, analytics rules, incidents and automation. A basic idea of Azure (tenant, subscription, resource group) helps.',
+    terms: ['sentinel', 'log-analytics', 'data-connector', 'ama', 'dcr', 'analytics-rule', 'incident', 'subscription'],
+    revisit: ['siem-pipeline', 'kql-what-why', 'comp-files-systems'],
+    resources: res('learnSentinelIntro', 'learnAzureCore', 'learnSentinelEnv'),
+  },
+  'defender-xdr': {
+    intro: 'Microsoft Defender XDR watches devices, email, identities and cloud apps, and joins related alerts into one incident. This module explains what XDR adds on top of a SIEM and how to read an incident\'s attack story.',
+    terms: ['xdr', 'edr', 'defender-xdr', 'incident', 'alert', 'entity', 'attack-disruption'],
+    revisit: ['soc-event-to-incident'],
+    resources: res('sec101Xdr', 'sec101Edr', 'learnXdrIntro', 'learnXdrPath'),
+  },
+  mde: {
+    intro: 'Defender for Endpoint is the security sensor on each computer. It records processes, files, connections and registry changes, and lets you respond (isolate, collect evidence). The Computer Fundamentals and Windows modules are the foundation here.',
+    terms: ['mde', 'edr', 'process', 'parent-process', 'device-isolation', 'live-response', 'asr-rules', 'custom-indicator'],
+    revisit: ['comp-processes', 'win-event-logs'],
+    resources: res('sec101Edr', 'learnXdrPath', 'processExplorer'),
+  },
+  mdo: {
+    intro: 'Defender for Office 365 protects email and Teams. You will learn to find every copy of a phishing email, see who clicked, and remove it from mailboxes. Read the Phishing module first.',
+    terms: ['mdo', 'phishing', 'safe-links', 'zap', 'emailevents', 'bec'],
+    revisit: ['phish-email-auth'],
+    resources: res('sec101Phishing', 'learnXdrIntro', 'mdo'),
+  },
+  mdi: {
+    intro: 'Defender for Identity watches domain controllers and spots attacks on Active Directory: reconnaissance, stolen credentials, lateral movement. The Active Directory module is essential background.',
+    terms: ['mdi', 'domain-controller', 'kerberos', 'ldap', 'credential-dumping', 'pass-the-hash', 'lateral-movement'],
+    revisit: ['ad-domains-kerberos', 'ad-kerberos-attacks'],
+    resources: res('adOverview', 'learnXdrIntro', 'mdi'),
+  },
+  'cloud-security': {
+    intro: 'Cloud attacks often never touch a laptop: a leaked key, a stolen token or a malicious app is enough. Before starting, make sure you know how Azure is organized — tenant → subscription → resource group → resource — and that every change goes through Azure Resource Manager.',
+    terms: ['cloud-computing', 'tenant', 'subscription', 'resource-group', 'azure-resource-manager', 'storage-account', 'key-vault', 'oauth-consent'],
+    revisit: ['comp-files-systems', 'entra-signins-audit'],
+    resources: res('learnAzureCore', 'sec101Cloud', 'learnCloudMgmt', 'learnMdcPath'),
+  },
+  'm365-investigation': {
+    intro: 'Microsoft Purview protects and audits company data: what was shared, downloaded or accessed. Graph activity logs show what apps and tokens did through Microsoft\'s APIs. These lessons are more advanced — finish Entra ID and Phishing first.',
+    terms: ['dlp', 'unified-audit-log', 'graph-activity-logs', 'api', 'session-token', 'tenant'],
+    revisit: ['entra-signins-audit', 'phish-email-auth'],
+    resources: res('sec101Dlp', 'learnCompliance', 'purviewAudit'),
+  },
+  'advanced-hunting': {
+    intro: 'Advanced Hunting is KQL inside Defender XDR. The hard part isn\'t the syntax — it\'s knowing which table answers your question. This module is a map from questions to tables.',
+    terms: ['advanced-hunting', 'kql', 'deviceprocessevents', 'devicenetworkevents', 'emailevents', 'identitylogonevents'],
+    revisit: ['kql-what-why'],
+    resources: res('ahLanguage', 'learnFirstKql', 'kc7'),
+  },
+  'incident-response': {
+    intro: 'Incident response is what happens after an attack is confirmed: understand it, stop it, clean up, recover, and learn. This module walks through each phase and the decisions analysts make along the way.',
+    terms: ['incident', 'triage', 'containment', 'device-isolation', 'blast-radius'],
+    revisit: ['soc-triage-verdicts'],
+    resources: res('sec101Ir', 'irOverview', 'cisaPlaybooks'),
+  },
+  'detection-engineering': {
+    intro: 'Detection engineering is building the rules that create alerts — and making sure they are accurate. You will turn an idea ("password spraying looks like this") into a tested, tuned KQL rule.',
+    terms: ['detection-engineering', 'analytics-rule', 'false-positive', 'baseline', 'watchlist', 'mitre-attack'],
+    revisit: ['kql-what-why', 'sentinel-analytics-rules'],
+    resources: res('learnSentinelEnv', 'attackStart', 'sentinelCreateRule'),
+  },
+  soar: {
+    intro: 'SOAR means letting software do repetitive response steps — enrich an alert, notify a team, disable an account — so analysts can focus on decisions. This module also covers when automation should still ask a human.',
+    terms: ['soar', 'automation-rule', 'playbook', 'attack-disruption', 'soc-metrics'],
+    revisit: ['sentinel-analytics-rules'],
+    resources: res('sec101Soar', 'sentinelAutomation', 'sentinelPlaybooks'),
+  },
+  'threat-hunting': {
+    intro: 'Hunting means searching for attackers that no rule has caught yet, starting from an idea you can test. It combines everything before it: knowing normal behavior, MITRE techniques and KQL.',
+    terms: ['threat-hunting', 'baseline', 'mitre-attack', 'advanced-hunting', 'blast-radius', 'jupyter-notebook'],
+    revisit: ['ah-choose-table', 'mitre-framework'],
+    resources: res('sec101Hunting', 'kc7', 'sentinelHunting'),
+  },
+  projects: {
+    intro: 'Build real things in your own free lab and write them up for your portfolio. Each project uses free trials or sample data — never your employer\'s systems without permission.',
+    terms: ['log-analytics', 'data-connector', 'kql', 'analytics-rule'],
+    revisit: ['kql-what-why', 'sentinel-architecture'],
+    resources: res('adx', 'learnFirstKql', 'kustoDetective'),
+  },
+}
+for (const m of MODULES) m.starter ??= STARTERS[m.id]
 
 export const moduleById = (id: string) => MODULES.find(m => m.id === id)

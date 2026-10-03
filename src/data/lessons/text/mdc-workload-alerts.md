@@ -1,6 +1,6 @@
 ## bridge
 
-You know how cloud computing works (infrastructure, platform and software as a service — IaaS, PaaS and SaaS) and the shared responsibility model. You've investigated endpoints with Defender for Endpoint and Azure control-plane activity with the `AzureActivity` table. **Microsoft Defender for Cloud** brings those together for cloud **workloads** — virtual machines, storage accounts, databases, key vaults, containers and the cloud management plane itself — and raises **security alerts** when they are attacked.
+You know how cloud computing works (infrastructure, platform and software as a service — IaaS, PaaS and SaaS) and the shared responsibility model. You've investigated endpoints with Defender for Endpoint and Azure control-plane activity with the `AzureActivity` table. **Microsoft Defender for Cloud** brings those together for cloud **workloads** — virtual machines, [[storage-account|storage accounts]], databases, [[key-vault|key vaults]], containers and the cloud [[azure-resource-manager|management plane]] itself — and raises **security alerts** when they are attacked.
 
 This lesson shows what those alerts look like and how an analyst responds with *cloud-native* actions.
 
@@ -43,7 +43,7 @@ Cloud workloads need their own detections because:
 - Cloud resources change constantly; misconfigurations (public storage, open management ports) appear daily.
 - Under shared responsibility, **you** own your data, identities and configuration — the provider won't investigate your storage account for you.
 
-Defender for Cloud gives the SOC alerts **with cloud context** (which subscription, resource, identity and operation), so responders can act in the cloud quickly.
+Defender for Cloud gives the SOC alerts **with cloud context** (which [[subscription|subscription]], resource, identity and operation), so responders can act in the cloud quickly.
 
 ## name
 

@@ -37,6 +37,21 @@ for (const o of OBJECTIVES) { const n = d.ALL_QUESTIONS.filter(q => q.objectives
 for (const q of d.ALL_QUESTIONS) for (const o of q.objectives ?? []) if (!obj.has(o)) bad.push(`question ${q.id}: objective ${o}`)
 const ids = d.ALL_QUESTIONS.map(q => q.id); for (const id of ids.filter((x, i) => ids.indexOf(x) !== i)) bad.push(`duplicate question ${id}`)
 const iids = INTERVIEW.map(q => q.id); for (const id of iids.filter((x, i) => iids.indexOf(x) !== i)) bad.push(`duplicate interview ${id}`)
+// Beginner starter kits: every module with lessons has one, and its terms, lessons and links resolve.
+for (const m of MODULES) {
+  if (m.lessons.length && !m.starter) bad.push(`module ${m.id}: no beginner starter kit`)
+  if (!m.starter) continue
+  for (const t of m.starter.terms) if (!gl.has(t)) bad.push(`module ${m.id}: starter term ${t}`)
+  for (const l of m.starter.revisit ?? []) if (!ls.has(l)) bad.push(`module ${m.id}: starter revisit ${l}`)
+  for (const r of m.starter.resources) if (!r?.url) bad.push(`module ${m.id}: starter resource missing`)
+}
+// Mojibake: UTF-8 text that was saved through a legacy code page (e.g. "â€”" for "—").
+{
+  const { readdirSync, readFileSync } = await import('node:fs')
+  const walk = dir => readdirSync(dir, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(`${dir}/${e.name}`) : [`${dir}/${e.name}`])
+  for (const f of walk('src').filter(f => /\.(ts|tsx|md|css)$/.test(f)))
+    if (/â€|Ã[\u0080-¿]|Â[§·°]/.test(readFileSync(f, 'utf8'))) bad.push(`${f}: garbled characters (encoding)`)
+}
 console.log(bad.length ? bad.join('\n') : `Integrity OK: ${d.LESSONS.length} lessons, ${d.ALL_QUESTIONS.length} questions, ${GLOSSARY.length} glossary terms, ${INTERVIEW.length} interview questions.`)
 await server.close()
 if (bad.length) process.exit(1)

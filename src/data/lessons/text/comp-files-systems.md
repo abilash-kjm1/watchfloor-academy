@@ -45,7 +45,7 @@ This lesson covers all five ideas, with the security relevance of each.
 **Why security cares:**
 - Most company servers today are VMs.
 - **Snapshots** (saved copies of a VM's state) help with recovery and investigation.
-- Security teams analyze suspicious files in disposable VMs called **sandboxes** — which is why some malware checks whether it's running in a VM.
+- Security teams analyze suspicious files in disposable VMs called **[[sandbox|sandboxes]]** — which is why some malware checks whether it's running in a VM.
 
 ### 5. Cloud computing
 **Simple:** **renting computing** (servers, storage, software) from a provider over the internet instead of owning it.
@@ -59,6 +59,20 @@ This lesson covers all five ideas, with the security relevance of each.
 | **SaaS** — Software as a Service | Finished software used through a browser | Microsoft 365, Salesforce |
 
 **Why security cares:** in the cloud, **identity becomes the main door** — anyone on the internet can try to sign in — and the cloud provider's **activity logs** become key evidence.
+
+### Cloud, continued: how Microsoft's cloud is organized
+Later modules (Sentinel, Defender for Cloud) assume you know four nested containers. From biggest to smallest:
+
+| Container | What it is | Everyday comparison |
+|---|---|---|
+| **[[tenant|Tenant]]** | Your organization's own Microsoft Entra ID directory: its users, groups and apps | The company itself |
+| **[[subscription|Subscription]]** | A billing and management container for Azure resources (a tenant can have many) | A department's budget |
+| **[[resource-group|Resource group]]** | A folder holding related resources so they're managed together | A project folder |
+| **Resource** | One actual thing: a VM, a [[storage-account|storage account]], a [[key-vault|key vault]], a Log Analytics workspace | A document in the folder |
+
+Every create, change or delete in Azure goes through one front door, **[[azure-resource-manager|Azure Resource Manager]]**, and is written to the **Azure activity log**. That's why "who created this VM at 02:00?" always has an answer.
+
+> Example: tenant *Contoso* → subscription *Production* → resource group *rg-finance* → VM *fin-srv-01*.
 
 ## why
 
@@ -84,7 +98,7 @@ These ideas let an analyst answer:
 2. **Who could change it?** (permissions)
 3. **Which servers did the account reach?** (client/server connections)
 4. **Can we roll back or examine a copy?** (VM snapshots)
-5. **What did someone do in our cloud subscription?** (cloud activity logs)
+5. **What did someone do in our cloud [[subscription|subscription]]?** (cloud activity logs)
 
 ## analogy
 
@@ -206,7 +220,7 @@ Defensive view — how these building blocks are misused:
 For any suspicious file:
 1. **Where is it?** (path)
 2. **Where did it come from?** (origin URL / email / share)
-3. **When?** (timestamps, in UTC — Coordinated Universal Time, the single time zone security logs use)
+3. **When?** (timestamps, in [[utc|UTC]] — Coordinated Universal Time, the single time zone security logs use)
 4. **Did it run?** (process events with the same hash)
 5. **Where else is it?** (search the hash everywhere)
 

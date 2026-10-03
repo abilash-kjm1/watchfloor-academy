@@ -27,7 +27,7 @@ This lesson covers the logging that reveals PowerShell's real content — **scri
 
 ## why
 
-**Why does script block logging exist?** Because attackers obfuscate commands: Base64 encoding, string splitting, compression. The command line shows gibberish. But PowerShell itself must decode the script to run it — so logging at that point captures the **real** content.
+**Why does script block logging exist?** Because attackers obfuscate commands: [[base64|Base64 encoding]], string splitting, compression. The command line shows gibberish. But PowerShell itself must decode the script to run it — so logging at that point captures the **real** content.
 
 **Why does AMSI exist?** For the same reason: scanning files on disk misses scripts that are built in memory or downloaded and run directly. AMSI scans what is actually about to execute.
 

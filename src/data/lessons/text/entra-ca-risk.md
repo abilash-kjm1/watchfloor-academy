@@ -150,7 +150,7 @@ Defensive view — weaknesses attackers look for:
 - **Gaps in policies** — users, apps or locations excluded from MFA.
 - **Legacy protocols** that cannot do MFA.
 - **MFA fatigue** — sending prompt after prompt until the user approves one.
-- **Fake sign-in pages that relay to the real one** (adversary-in-the-middle), capturing the session after MFA.
+- **Fake sign-in pages that relay to the real one** ([[aitm|adversary-in-the-middle]]), capturing the session after MFA.
 
 > Defenses: phishing-resistant MFA (security keys, passkeys), blocking legacy authentication, number matching in the Authenticator app, and reviewing policy exclusions.
 

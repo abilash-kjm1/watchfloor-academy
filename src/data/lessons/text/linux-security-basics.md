@@ -9,7 +9,7 @@ This lesson teaches the Linux version of each idea, and where its evidence ends 
 ## what
 
 ### 1. Linux in one sentence
-**Linux** is a free, open-source operating system family. Popular versions ("distributions") include **Ubuntu**, **Debian**, **Red Hat Enterprise Linux (RHEL)** and **Amazon Linux**. Most are run without a desktop, managed through a text terminal — often remotely over **SSH (Secure Shell)**, an encrypted remote-login protocol on TCP port 22.
+**Linux** is a free, open-source operating system family. Popular versions ("distributions") include **Ubuntu**, **Debian**, **Red Hat Enterprise Linux (RHEL)** and **Amazon Linux**. Most are run without a desktop, managed through a text terminal — often remotely over **[[ssh|SSH (Secure Shell)]]**, an encrypted remote-login protocol on TCP port 22.
 
 ### 2. Users and groups
 - Every user has a name and a number, the **UID (user ID)**. Accounts are listed in `/etc/passwd`.

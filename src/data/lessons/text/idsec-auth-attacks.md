@@ -18,7 +18,7 @@ MFA requires two or more of: something you **know** (password), something you **
 
 MFA blocks the vast majority of password attacks — a stolen password alone is not enough. But attackers adapt:
 - **MFA fatigue** ("push bombing") — sending approval prompts again and again until a tired user taps *Approve*. **Number matching** (typing a number shown on screen) defeats this.
-- **Adversary-in-the-middle (AiTM) phishing** — a fake sign-in page relays everything to the real one, then **steals the session cookie** issued *after* MFA.
+- **[[aitm|Adversary-in-the-middle (AiTM) phishing]]** — a fake sign-in page relays everything to the real one, then **steals the session cookie** issued *after* MFA.
 - **SIM swapping** — taking over a phone number to receive text-message codes.
 
 **Phishing-resistant MFA** — FIDO2 security keys, passkeys, Windows Hello for Business, certificate-based authentication — is tied to the real website, so a fake page can't use it.

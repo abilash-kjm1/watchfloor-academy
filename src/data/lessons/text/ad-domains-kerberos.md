@@ -20,13 +20,13 @@ A **domain controller (DC)** is a server that holds a copy of the AD database an
 
 ### 3. Objects, OUs and Group Policy
 - Everything in AD is an **object**: a user, a group, a computer.
-- **Organizational units (OUs)** are folders that organize objects (for example `Sales`, `Servers`).
+- **[[ou|Organizational units (OUs)]]** are folders that organize objects (for example `Sales`, `Servers`).
 - **Group Policy Objects (GPOs)** push settings to computers and users in an OU — password rules, firewall settings, software, scripts.
 
 ### 4. How sign-ins work: Kerberos and NTLM
 - **[[kerberos|Kerberos]]** — the default. You prove your password once to the DC and receive **tickets** that you show to each service. Your password is not sent across the network.
 - **[[ntlm|NTLM]] (NT LAN Manager)** — an older challenge-response method, still used when Kerberos can't be (for example when connecting by IP address instead of name).
-- **LDAP (Lightweight Directory Access Protocol)** — the protocol programs use to **look things up** in the directory: "which groups is Alex in?"
+- **[[ldap|LDAP (Lightweight Directory Access Protocol)]]** — the protocol programs use to **look things up** in the directory: "which groups is Alex in?"
 
 ### 5. Privileged groups
 Some groups hold enormous power:
@@ -94,7 +94,7 @@ Kerberos uses **TCP/UDP port 88** on the DC.
 2. The client answers using a value derived from the password hash.
 3. The DC confirms the answer is right. *(DC event 4776.)*
 
-NTLM is weaker than Kerberos: it doesn't verify the server's identity, and a stolen password hash can be replayed ("pass-the-hash").
+NTLM is weaker than Kerberos: it doesn't verify the server's identity, and a stolen password hash can be replayed ("[[pass-the-hash|pass-the-hash]]").
 
 ### Step 3: How group changes are recorded
 When someone adds a user to a group, the DC logs:

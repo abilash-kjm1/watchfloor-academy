@@ -78,7 +78,7 @@ Most people use Windows by clicking. Windows also lets you control it by **typin
 **SYSTEM**
 - A built-in Windows account with the highest privileges on a computer. Windows itself and many services run as SYSTEM.
 
-**Registry**
+**[[registry|Registry]]**
 - A built-in Windows database of settings — for example, which programs start automatically when you log in.
 
 **Digital signature (publisher)**
@@ -282,7 +282,7 @@ Look for these warning signs:
 - **Programs running from temporary or download folders**
   - e.g. `Downloads`, `Temp`, `AppData`, especially if the file is unsigned.
 - **Long or scrambled command lines**
-  - e.g. very long encoded text after the program name.
+  - e.g. very long [[base64|encoded text]] after the program name.
 - **Unexpected privilege**
   - A process running as `SYSTEM` that a normal user appears to have started.
 

@@ -3,8 +3,8 @@ import type { Resource } from '../data/types'
 import { actions, useProgress } from '../progress/store'
 import { cx } from './ui'
 
-const KIND_LABEL: Record<Resource['kind'], string> = { primary: 'Primary resource', video: 'Video', docs: 'Official documentation', optional: 'Optional', lab: 'Hands-on lab' }
-const ORDER: Resource['kind'][] = ['primary', 'video', 'docs', 'lab', 'optional']
+const KIND_LABEL: Record<Resource['kind'], string> = { beginner: 'Beginner-friendly', primary: 'Primary resource', video: 'Video', docs: 'Official documentation', optional: 'Optional', lab: 'Hands-on lab' }
+const ORDER: Resource['kind'][] = ['beginner', 'primary', 'video', 'docs', 'lab', 'optional']
 
 export function ResourceCards({ resources }: { resources: Resource[] }) {
   const p = useProgress()

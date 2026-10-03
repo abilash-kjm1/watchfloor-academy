@@ -12,8 +12,8 @@ Some try. This lesson is about what happens when they do — and why a SOC can u
 **Event 1102** is written to the Windows **Security** log every time that log is cleared. It is the first entry in the new, empty log.
 
 It records:
-- **Who** cleared it — the account's security identifier (SID), account name and domain;
-- **The Logon ID** of that account's session — a number that links back to the session's sign-in event (4624);
+- **Who** cleared it — the account's [[sid|security identifier (SID)]], account name and domain;
+- **The [[logon-id|Logon ID]]** of that account's session — a number that links back to the session's sign-in event (4624);
 - **When** and on **which computer**.
 
 In simple terms: Windows is saying *"Someone just cleared the Security log."* Now we need to find out who did it, and why.

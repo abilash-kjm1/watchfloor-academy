@@ -73,7 +73,7 @@ Playbooks make the night shift respond the same way as the day shift.
 ### Speed
 SOCs measure themselves with two key numbers:
 
-- **Mean time to detect (MTTD)** — how long until we notice.
+- **[[soc-metrics|Mean time to detect (MTTD)]]** — how long until we notice.
 - **Mean time to respond (MTTR)** — how long until we act.
 
 ## how

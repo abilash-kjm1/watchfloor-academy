@@ -9,7 +9,7 @@ This lesson explains — from the defender's side — the Kerberos attacks SOC a
 ## what
 
 ### 1. Kerberoasting
-Any authenticated domain user can request a **service ticket** for any service account that has a **service principal name (SPN)**. Part of that ticket is encrypted with a key derived from the **service account's password**. An attacker can request tickets and try to **crack the password offline** — no failed logons, no lockouts.
+Any authenticated domain user can request a **service ticket** for any service account that has a **[[spn|service principal name (SPN)]]**. Part of that ticket is encrypted with a key derived from the **service account's password**. An attacker can request tickets and try to **crack the password offline** — no failed logons, no lockouts.
 - **Most at risk:** service accounts with **weak or old passwords**, especially where tickets use the older **RC4** encryption.
 - **Evidence:** many **4769** (service ticket requested) events from one account in a short time, often with RC4 encryption type (`0x17`).
 

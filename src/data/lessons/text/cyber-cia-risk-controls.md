@@ -4,7 +4,7 @@ So far you have learned how computers, networks, Windows, Linux and identities w
 
 Every later lesson — phishing, detections, incident response — uses these words. When an analyst says "this is high risk" or "that control failed", this is what they mean.
 
-**Chain:** What we protect (confidentiality, integrity, availability) → what threatens it (threats exploit vulnerabilities) → how likely and how bad (risk) → what reduces it (controls in layers) → how we know a control failed (detection and evidence)
+**Chain:** What we protect (confidentiality, integrity, availability) → what threatens it (threats [[exploit|exploit]] vulnerabilities) → how likely and how bad (risk) → what reduces it (controls in layers) → how we know a control failed (detection and evidence)
 
 ## what
 

@@ -196,7 +196,7 @@ Junior analysts can start hunting by **rerunning** the team's saved hunting quer
 
 - **Microsoft Sentinel hunting** — built-in and custom hunting queries with MITRE mapping, the **Hunts** experience to manage hunting campaigns, **bookmarks**, and promotion of findings to incidents.
 - **Microsoft Sentinel data lake** — low-cost long-term storage; **KQL jobs** search it and promote results; **summary rules** pre-aggregate high-volume data.
-- **Notebooks** — Jupyter notebooks for advanced analysis and visualization.
+- **Notebooks** — [[jupyter-notebook|Jupyter notebooks]] for advanced analysis and visualization.
 - **Microsoft Defender XDR Advanced Hunting** — hunting across endpoint, email, identity and cloud-app tables; create custom detections from hunts.
 - **Threat analytics** — reports that suggest hunting queries for active threats.
 

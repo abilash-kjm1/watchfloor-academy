@@ -21,8 +21,8 @@ A sensor reads the server's **network traffic** for identity protocols and its *
 |---|---|---|
 | Reconnaissance | Account enumeration; security principal reconnaissance (LDAP); network-mapping (DNS) reconnaissance | Someone listing users, groups, admins or hosts |
 | Credential access | Suspected brute force; suspected Kerberos service-ticket requests for cracking (Kerberoasting) | Password guessing; requests aimed at offline cracking |
-| Lateral movement | Suspected pass-the-hash / pass-the-ticket | Stolen credentials reused on other machines |
-| Domain dominance | Suspected DCSync (directory replication); suspected Golden Ticket usage | Requests only a DC should make; forged tickets |
+| Lateral movement | Suspected [[pass-the-hash|pass-the-hash]] / pass-the-ticket | Stolen credentials reused on other machines |
+| Domain dominance | Suspected [[credential-dumping|DCSync]] (directory replication); suspected Golden Ticket usage | Requests only a DC should make; forged tickets |
 
 ### 4. More than alerts
 - **Identity security posture assessments** — misconfigurations such as accounts with passwords that never expire, weak encryption, risky delegation (shown in Secure Score and Exposure Management).

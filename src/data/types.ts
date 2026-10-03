@@ -11,7 +11,7 @@ export type SkillId =
 
 export interface Skill { id: SkillId; name: string; blurb: string }
 
-export type ResourceKind = 'primary' | 'video' | 'docs' | 'optional' | 'lab'
+export type ResourceKind = 'beginner' | 'primary' | 'video' | 'docs' | 'optional' | 'lab'
 export interface Resource {
   kind: ResourceKind
   title: string
@@ -163,6 +163,19 @@ export interface Module {
   /** 'ready' modules have full lessons; 'outline' modules show objectives and where the topic is taught today. */
   status: 'ready' | 'outline'
   coveredIn?: string[]
+  /** Beginner starter kit shown at the top of the module page. */
+  starter?: ModuleStarter
+}
+
+export interface ModuleStarter {
+  /** Plain-language orientation: what this module is about and what to know first. */
+  intro: string
+  /** Glossary ids a beginner should know before starting (shown with hover definitions). */
+  terms: string[]
+  /** Earlier lessons worth revisiting if the module feels hard. */
+  revisit?: string[]
+  /** Beginner-friendly outside resources (free). */
+  resources: Resource[]
 }
 
 export interface GlossaryTerm {
